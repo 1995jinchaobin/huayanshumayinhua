@@ -100,5 +100,7 @@ export default {
 </script>
 
 <style>
-
+.outboundList{
+  padding: 10px;
+}
 </style>

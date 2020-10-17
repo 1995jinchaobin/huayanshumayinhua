@@ -13,11 +13,12 @@ export default new Router({
     {
       path:'/home',
       name:'home',
+      redirect: '/orderManage',
       component: resolve => (require(['@/views/system/home/Home'],resolve)),
       children:[
         //订单管理
         {
-          path:'/',
+          path:'/orderManage',
           name: 'OrderManage',
           component: resolve => require(['@/views/system/manage/OrderManage'],resolve)
         },
@@ -80,9 +81,9 @@ export default new Router({
           component: resolve => require(['@/views/System/manage/ceshi'],resolve)
         },
         {
-          path:'/url',
-          name:'url',
-          component: resolve => require(['@/views/components/own/OwnHome'],resolve)
+          path:'/warnMessage',
+          name:'warnMessage',
+          component: resolve => require(['@/views/System/manage/WarnMessage'],resolve)
         }
         // {
         //   path:'/storage',

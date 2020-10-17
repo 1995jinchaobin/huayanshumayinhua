@@ -247,6 +247,7 @@
   export default {
     data() {
       return {
+        dataKey:null,
         openSet:true,
         //查询参数
         searchParams: {
@@ -415,10 +416,36 @@
             this.getData();
           })
         })
-      }
+      },
+      // 根据id查找面料列表
+    getDataOfKey () {
+      this.$get('/fabric/'+this.dataKey).then((data)=>{
+        // console.log(data.data.list)
+        console.log(data.data)
+        // this.rukuList = data.data.list
+        const a = new Array()
+        a[0] = data.data
+        console.log(a)
+        // a[0] = data.data
+        this.tableData = a
+        // this.total = data.data.total
+        // console.log(this.total)
+        console.log(this.tableData)
+      })
+    }
+    },
+    created(){
+      console.log(this.$route.params)
+      if (this.$route.params.key!==undefined){
+      this.dataKey = this.$route.params.key
+      console.log(this.$route.params.key)
+      this.getDataOfKey()
+    } else {
+      this.getData()
+    }
     },
     mounted() {
-      this.getData();
+      // this.getData();
       this.getUserList();
     },
     computed: {

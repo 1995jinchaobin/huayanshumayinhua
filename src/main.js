@@ -17,7 +17,7 @@ Vue.prototype.$get = get;
 Vue.prototype.$post = post;
 Vue.prototype.$deletefn = deletefn;
 Vue.prototype.$put = put;
-Vue.prototype.$imgUrl = 'http://192.168.1.115:9999/'
+Vue.prototype.$imgUrl = 'http://192.168.1.115:9999/image/'
 Vue.config.productionTip = false
 Vue.use(ElementUI)
 Vue.use(Print)

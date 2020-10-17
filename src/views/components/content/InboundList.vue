@@ -101,18 +101,34 @@
     </div>
     <!-- 查看码单 -->
     <div class="lookMadan">
-      <el-drawer :visible.sync="madanDrawer" :before-close="closeMadanDrawer">
+      <el-drawer :visible.sync="madanDrawer" :before-close="closeMadanDrawer" :title="'查看码单：'+lookMadanName" size="50%">
         <div>
-          <img :src="madanUrl" alt="#">
+          <img :src="$imgUrl+madanUrl" alt="#">
         </div>
       </el-drawer>
     </div>
     <!-- 上传码单 -->
     <div class="upMadan">
       <el-drawer :visible.sync="upmadanDrawer" :before-close="closeupMadanDrawer" :title="'上传码单：'+upMadan">
-        <form id="myForm" enctype="multipart/form-data" name="fileinfo" ref="upBiaodan">
-          <input @change='changeImg' id='imgFile' type='file'/>
-        </form>
+        <el-form label-width="75px">
+          <!-- <el-form-item label="上传码单:">
+            <form id="myForm" enctype="multipart/form-data" name="fileinfo" ref="upBiaodan">
+              <div class="searchArea">
+                <span>上传图片</span>
+                <input @change='changeImg' id='imgFile' type='file' class="fileInput"/>
+              </div>
+            </form>
+          </el-form-item> -->
+          <el-form-item label="上传码单:">
+            <form id="myForm" enctype="multipart/form-data" name="fileinfo" ref="upBiaodan">
+              <div class="searchArea">
+                <img :src="lookUrl" alt="#" class="lookUrl" v-show="lookUrl!==''"/>
+                <img src="../../../assets/add.png" alt="#">
+                <input @change='changeImg' id='imgFile' type='file' class="fileInput"/>
+              </div>
+            </form>
+          </el-form-item>
+        </el-form>
         <el-button @click="baocunMadan" type="primary">保存</el-button>
       </el-drawer>
     </div>
@@ -131,7 +147,12 @@ export default {
     return {
       // 查看码单
       madanDrawer:false,
+      lookMadanName:'',
       madanUrl:'',
+      // 上传图片
+      file:'',
+      formData:'',
+      lookUrl:'',
       // 上传码单
       upmadanDrawer:false,
       upMadan:'',
@@ -177,9 +198,9 @@ export default {
     },
      // 页码切换
     changePage(page) {
-        this.rukuParams.page = page;
-        this.getRukuList();
-      },
+      this.rukuParams.page = page;
+      this.getRukuList();
+    },
     // 搜索触发
     searchList (value) {
       console.log(value)
@@ -202,6 +223,7 @@ export default {
     // 查看码单按钮
     lookMadan (a) {
       console.log(a)
+      this.lookMadanName = a.customerName
       this.madanUrl = a.url
       this.madanDrawer = true
     },
@@ -212,37 +234,88 @@ export default {
     // 关闭上传码单
     closeupMadanDrawer () {
       this.upMadanParams.url = ''
+      this.file = ''
+      this.formData = ''
+      this.lookUrl = ''
       this.$refs.upBiaodan.reset()
       this.upmadanDrawer = false
     },
     // 上传码单
-    changeImg() {
+    changeImg(a) {
       console.log('上传图片')
       // 获取图片
-      const file = document.getElementById("imgFile").files[0]
-      const formData = new FormData()
-      if (file) {
-        formData.append('file', file);　　
-        formData.append('type', 3)
+      const fr = new FileReader()
+      fr.readAsDataURL(a.target.files[0])
+      fr.onload = e=> {
+        console.log(e.target.result)
+        this.lookUrl = e.target.result
       }
-      // const _this=this
-      axios.post('/file',formData).then(res=>{
+      this.file = document.getElementById("imgFile").files[0]
+      this.formData = new FormData()
+      // if (file) {
+      this.formData.append('file', this.file);　　
+      this.formData.append('type', 3)
+      // }
+      // axios.post('/file',formData).then(res=>{
+      //   console.log(res)
+      //   messageUtil.message.success(res.data.message)
+      //   if (res.data.code ===0){
+      //     this.upMadanParams.url = res.data.data
+      //   }
+      // })
+    },
+    // 获取码单url地址
+    getMadanUrl() {
+      axios.post('/file',this.formData).then(res=>{
         console.log(res)
-        messageUtil.message.success(res.data.message)
         if (res.data.code ===0){
-          this.upMadanParams.url = res.data.wwwFileBaseUrl+res.data.data
+          this.upMadanParams.url = res.data.data
         }
       })
     },
     // 保存上传码单
     baocunMadan () {
-      console.log(this.upMadanParams)
-      this.$put('/inventory/in/'+this.upMadanParamsId,this.upMadanParams).then((data)=>{
-      console.log(data)
-      messageUtil.message.success(data.message)
-      this.closeupMadanDrawer();
-      this.getRukuList();
+      // this.getMadanUrl()
+      axios.post('/file',this.formData).then(res=>{
+        console.log(res)
+        if (res.data.code ===0){
+          this.upMadanParams.url = res.data.data
+          this.$put('/inventory/in/'+this.upMadanParamsId,this.upMadanParams).then((data)=>{
+          console.log(data)
+          messageUtil.message.success(data.message)
+          this.closeupMadanDrawer();
+          this.getRukuList();
+          })
+        }
       })
+
+      console.log(this.upMadanParamsId)
+      console.log(this.upMadanParams)
+      // this.$put('/inventory/in/'+this.upMadanParamsId,this.upMadanParams).then((data)=>{
+      // console.log(data)
+      // messageUtil.message.success(data.message)
+      // this.closeupMadanDrawer();
+      // this.getRukuList();
+      // })
+      // this.getRukuList()
+      // this.closeAddStockDrawer()
+      // if(this.file!==''){
+        
+      // }
+      // axios.post('/file',this.formData).then(res=>{
+      //   console.log(res)
+      //   // messageUtil.message.success(res.data.message)
+      //   if (res.data.code ===0){
+      //     this.upMadanParams.url = res.data.data
+      //   }
+      // })
+      // console.log(this.upMadanParams)
+      // this.$put('/inventory/in/'+this.upMadanParamsId,this.upMadanParams).then((data)=>{
+      // console.log(data)
+      // messageUtil.message.success(data.message)
+      // this.closeupMadanDrawer();
+      // this.getRukuList();
+      // })
     },
     // 关闭入库抽屉
     closeRukuDrawer () {
@@ -257,6 +330,9 @@ export default {
 </script>
 
 <style>
+.inboundList{
+  padding: 10px;
+}
 .inboundList .rukeInfo{
   display: flex;
   justify-content: center;
@@ -267,4 +343,44 @@ export default {
 .inboundList .lookMadan img{
   width: 100%;
 }
+.inboundList .upMadan .el-form{
+  padding-left: 20px;
+  padding-right: 20px;
+}
+.inboundList .upMadan span{
+  word-wrap:break-word;
+}
+.inboundList .upMadan .el-button{
+  margin-left: 20px;
+}
+.inboundList .fileInput{
+  position: absolute;
+  width: 120px;
+  height: 80px;
+  top: 0;
+  left: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+.inboundList .searchArea{
+  position: absolute;
+  width: 120px;
+  height: 80px;
+  top: 0;
+  left: 0;
+  /* background-color: #409EFF; */
+  text-align: center;
+  color: #fff;
+  border-radius: 5%;
+  cursor: pointer;
+  }
+  .inboundList .searchArea .lookUrl {
+    width: 100%;
+    position: absolute;
+  }
+  .inboundList .upMadan .el-button{
+    /* position: absolute; */
+    /* bottom: 40px; */
+    margin-top: 50px;
+  }
 </style>

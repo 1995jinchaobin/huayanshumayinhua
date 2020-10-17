@@ -2,7 +2,7 @@
   <div class="stockInfo">
     <div class="tagSearch">
       <storeManageSearch ref="storeSearch" @searchList="searchList">
-        <template v-slot:one><el-button plain v-print="'#printArea'">导&nbsp;&nbsp;出</el-button></template>
+        <template v-slot:one><el-button plain v-print="'#printArea1'">导&nbsp;&nbsp;出</el-button></template>
         <!-- <el-button @click="onSubmit" plain>导&nbsp;&nbsp;出</el-button> -->
       </storeManageSearch>
       <div>
@@ -10,7 +10,7 @@
       </div> 
     </div>
     <el-table
-      id="printArea"
+      id="printArea1"
       :data="tableData"
       border
       :header-cell-style="headFirst">
@@ -110,13 +110,20 @@
             <el-input-number v-model="addStockParams.num" controls-position="right" :min="0" :precision="2" :step="1"></el-input-number>
           </el-form-item>
           <el-form-item label="上传码单(选项):">
-            <form id="myForm" enctype="multipart/form-data" name="fileinfo">
-              <input @change='changeImg' id='imgFile' type='file'/>
+            <form id="myForm" enctype="multipart/form-data" name="fileinfo" ref="upBiaodan">
+              <div class="searchArea">
+                <!-- <span>上传图片</span> -->
+                <img :src="lookUrl" alt="#" class="lookUrl" v-show="lookUrl!==''"/>
+                <img src="../../../assets/add.png" alt="#">
+                <input @change='changeImg' id='imgFile' type='file' class="fileInput"/>
+              </div>
             </form>
-          </el-form-item> 
+          </el-form-item>
         </el-form>
-        <el-button type="primary" @click="saveAddStock">保存</el-button>
-        <el-button type="primary" @click="closeAddStockDrawer">取消</el-button>
+        <div class="btn">
+          <el-button type="primary" @click="saveAddStock">保存</el-button>
+          <el-button type="primary" @click="closeAddStockDrawer">取消</el-button>
+        </div>
       </el-drawer>
     </div>
     <!-- 上浆调拨抽屉 -->
@@ -126,26 +133,6 @@
         :before-close="closeCheckShangJiang"
         :title="addSizingTitle+':'+'上浆调拨'">
         <el-form label-width="120px" :model="addShangJiangParams" :rules="addShangJiangParamsRules" ref="addShangJiangParamsRef">
-          <!-- <el-form-item label="客户:" prop="fkCustomerId">
-            <el-select v-model="addStockParams.fkCustomerId" placeholder="请选择" @change="getUserId">
-              <el-option
-                v-for="item in userList"
-                :key="item.id"
-                :label="item.name"
-                :value="item.id">
-              </el-option>
-            </el-select>
-          </el-form-item>
-          <el-form-item label="面料品类:" prop="fkFabricId">
-            <el-select v-model="addStockParams.fkFabricId" placeholder="请选择">
-              <el-option
-                v-for="item in categoryList"
-                :key="item.id"
-                :label="item.name"
-                :value="item.id">
-              </el-option>
-            </el-select>
-          </el-form-item> -->
           <el-form-item label="上浆匹数:" prop="rollNum">
             <el-input-number v-model="addShangJiangParams.rollNum" controls-position="right" :min="0" :max="shangJiangRollNumMax" :precision="0"></el-input-number>
           </el-form-item>
@@ -217,6 +204,7 @@ export default {
   },
   data() {
     return {
+      dataKey:null,
       drawer:false,
       sreachpage:{
         page:1,
@@ -244,6 +232,10 @@ export default {
         // 面料id
         fkFabricId:''
       },
+      // 码单上传
+      file:'',
+      formData:'',
+      lookUrl:'',
       // 客户选择
       userList:[],
       // 面料品类选择
@@ -352,6 +344,10 @@ export default {
     closeAddStockDrawer() {
       console.log('关闭')
       this.$refs.addStockParamsRef.resetFields()
+      this.$refs.upBiaodan.reset()
+      this.file = ''
+      this.formData = ''
+      this.lookUrl = ''
       this.drawer = false
     },
     // 获取客户名
@@ -381,43 +377,73 @@ export default {
         console.log(this.categoryList)
       })
     },
+    // 保存新增入库（无码单）
+    saveAddStockNo() {
+      // this.$refs.addStockParamsRef.validate(value => {
+      //   console.log(value)
+      //   if (!value) return
+      console.log(this.addStockParams)
+      this.$post('/inventory/in/add',this.addStockParams).then((data)=>{
+      console.log(data)
+      if (data.code!==0) return messageUtil.message.error(data.message)
+      messageUtil.message.success(data.message)
+      // this.closeCheckDrawer();
+      this.closeAddStockDrawer()
+      this.getData();
+      })
+      // })
+    },
     // 保存新增入库
     saveAddStock() {
       this.$refs.addStockParamsRef.validate(value => {
-        console.log(value)
         if (!value) return
-        console.log(this.addStockParams)
-        this.$post('/inventory/in/add',this.addStockParams).then((data)=>{
-        console.log(data)
-        if (data.code!==0) return messageUtil.message.error(data.message)
-        messageUtil.message.success(data.message)
-        // this.closeCheckDrawer();
-        this.closeAddStockDrawer()
-        this.getData();
-        })
+        if(this.file!=='') {
+        console.log('有码单图片')
+        this.changChuanImg()
+        setTimeout(()=>{
+          this.saveAddStockNo()
+          },500
+        )
+        // this.saveAddStockNo()
+        console.log('结束')
+      } else{
+        console.log('无码单图片')
+        this.saveAddStockNo()
+      }
       })
     },
-    // 上传图片
-    changeImg() {
+    // 上传图片(缓存)
+    changeImg(a) {
       console.log('上传图片')
+      // console.log(a.target)
+      // const file1 = a.target.files[0]
+      const fr = new FileReader()
+      fr.readAsDataURL(a.target.files[0])
+      fr.onload = e=> {
+        console.log(e.target.result)
+        this.lookUrl = e.target.result
+      }
       // 获取图片
-      const file = document.getElementById("imgFile").files[0]
-      const formData = new FormData()
-      if (file) {
-        formData.append('file', file);　　
-        formData.append('type', 3)
+      this.file = document.getElementById("imgFile").files[0]
+      console.log(this.file)
+      this.formData = new FormData()
+      // if (file) {
+      this.formData.append('file', this.file);　　
+      this.formData.append('type', 3)
         // console.log(formData)
         // console.log(formData.get('type'))
         // console.log(formData.get('file'))
-      }
-      // const _this=this
-      axios.post('/file',formData).then(res=>{
+      // }
+    },
+    // 上传图片
+    changChuanImg() {
+      axios.post('/file',this.formData).then(res=>{
         console.log(res)
-        messageUtil.message.success(res.data.message)
+        // messageUtil.message.success(res.data.message)
         if (res.data.code ===0){
           console.log(this.drawer)
           console.log(this.addStockParams)
-          this.addStockParams.url = res.data.wwwFileBaseUrl+res.data.data
+          this.addStockParams.url = res.data.data
           console.log(this.addStockParams)
         }
       })
@@ -482,17 +508,42 @@ export default {
         this.closeCheckDrawer()
         this.getData()
       })
+    },
+    // 根据id查找仓储列表
+    getDataOfKey () {
+      this.$get('/inventory/'+this.dataKey).then((data)=>{
+        // console.log(data.data.list)
+        console.log(data.data)
+        // this.rukuList = data.data.list
+        const a = new Array()
+        a[0] = data.data
+        console.log(a)
+        // a[0] = data.data
+        this.tableData = a
+        // this.total = data.data.total
+        // console.log(this.total)
+        console.log(this.tableData)
+      })
     }
   },
   created(){
     // console.log(this.$refs)
     // console.log(this.$refs.storeSearch)
-    this.getData()
+    // console.log(this.$route)
+    // console.log(this.$route.params)
+    if (this.$route.params.key!==undefined){
+      this.dataKey = this.$route.params.key
+      // console.log(this.$route.params.key)
+      this.getDataOfKey()
+    } else {
+      this.getData()
+    }
   },
   mounted() {
     console.log(this.$refs)
     console.log(this.$refs.storeSearch)
     this.$refs.storeSearch.getRegionlist()
+    // this.$route.query = {}
   }
 }
 </script>
@@ -524,10 +575,40 @@ export default {
 /* .storeManageSearch{
   width: 800px;
 } */
-.pagination{
+.stockInfo .pagination{
   /* background-color: aqua; */
   display: flex;
   justify-content: flex-end;
   margin-top: 10px;
 }
+.stockInfo .fileInput{
+  position: absolute;
+  width: 120px;
+  height: 140px;
+  top: 0;
+  left: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+.stockInfo .searchArea{
+  position: absolute;
+  width: 120px;
+  height: 140px;
+  top: 0;
+  left: 0;
+  /* background-color: #409EFF; */
+  text-align: center;
+  color: #fff;
+  border-radius: 5%;
+  cursor: pointer;
+  }
+  .stockInfo .btn{
+    padding-left: 120px;
+    position: absolute;
+    bottom:40px ;
+  }
+  .stockInfo .lookUrl{
+    width: 100%;
+    position: absolute;
+  }
 </style>

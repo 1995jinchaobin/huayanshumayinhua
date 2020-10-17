@@ -7,6 +7,8 @@
         </div>
         <div class="leftNav">
           <el-menu
+            :default-openeds="defaultOpenedsArray"
+            :default-active="defaultActive"
             class="leftMenu"
             background-color="#001529"
             text-color="#fff"
@@ -21,12 +23,19 @@
               </template>
               <el-menu-item-group>
                 <el-menu-item
+                  @click="saveNavState(nav.url)"
                   v-for="(nav,navIndex) in item.subSysMenus"
                   :index="nav.url"
                   :key="nav.name+navIndex"
                 >{{nav.name}}</el-menu-item>
               </el-menu-item-group>
             </el-submenu>
+            <div class="warnMessage" @click="toWarnMessage" :style="defaultActive==='/warnMessage'?styleObject:''">
+              <span>警戒管理</span>
+              <el-badge :value="warnMessageValue" :max="99">
+                <!-- <span>警戒管理</span> -->
+              </el-badge>
+            </div>
           </el-menu>
         </div>
       </el-col>
@@ -55,6 +64,17 @@ import { mapMutations, mapGetters } from "vuex";
 export default {
   data() {
     return {
+      getWarnMessageParams:{
+        page:1,
+        rows:1
+      },
+      timer:'',
+      warnMessageValue:null,
+      styleObject:{
+        background:'#1890ff'
+      },
+      defaultOpenedsArray:[],
+      defaultActive:'',
       actions: {
         getCurrentUser: "/system/user/getCurrentUser",
         loginOut: "/system/user/loginOut",
@@ -62,9 +82,10 @@ export default {
       menus: [
         {name:'用户管理',key:'用户管理',subSysMenus:[{name:'员工管理',url:'/userManage'},{name:'客户管理',url:'/customerManage'}]},
         {name:'数据管理',key:'数据管理',subSysMenus:[{name:'面料管理',url:'/fabricManage'},{name:'机器管理',url:'/machineManage'},{name:'配置方案管理',url:'/configuration'},{name:"IP锁定",url:'/setIp'}]},
-        {name:'订单管理',key:'订单管理',subSysMenus:[{name:'订单管理',url:'/home'}]},
+        {name:'订单管理',key:'订单管理',subSysMenus:[{name:'订单管理',url:'/orderManage'}]},
         // {name:'仓储管理',key:'仓储管理',subSysMenus:[{name:'订单管理',url:'/home'}]}
         {name:'仓储管理',key:'仓储管理',subSysMenus:[{name:'面料管理',url:'/storeManagement'}]}
+        // {name:'警戒管理',key:'警戒管理',subSysMenus:[{name:'警戒管理',url:'/warnMessage'}]}
       ],
       isCollapse: false,
       leftSpan: 3,
@@ -73,8 +94,17 @@ export default {
       roleList: []
     };
   },
+  created() {
+    this.warnMessage()
+    this.timer = setInterval(this.warnMessage,10000)
+    this.defaultActive = window.sessionStorage.getItem('defaultActive')
+  },
   methods: {
     ...mapMutations(["saveLoginInfo"]),
+    saveNavState (defaultActive) {
+      window.sessionStorage.setItem('defaultActive',defaultActive)
+      this.defaultActive = defaultActive
+    },
     goToHome() {
       if(localStorage.getItem("userType") == 2){
         this.$router.push("/home");
@@ -114,22 +144,47 @@ export default {
         if(localStorage.getItem("userType") == 3){
           this.menus = [
             {name:'数据管理',key:'数据管理',subSysMenus:[{name:'面料管理',url:'/fabricManage'}]},
-            {name:'订单管理',key:'订单管理',subSysMenus:[{name:'订单管理',url:'/home'}]}
+            {name:'订单管理',key:'订单管理',subSysMenus:[{name:'订单管理',url:'/orderManage'}]}
           ]
         }else{
           this.menus = [
             {name:'用户管理',key:'用户管理',subSysMenus:[{name:'员工管理',url:'/userManage'},{name:'客户管理',url:'/customerManage'}]},
             {name:'数据管理',key:'数据管理',subSysMenus:[{name:'面料管理',url:'/fabricManage'},{name:'机器管理',url:'/machineManage'},{name:'配置方案管理',url:'/configuration'},{name:"IP锁定",url:'/setIp'},{name:'数据统计',url:"/statistics"},{name:'Websocket',url:"/Websocket"}]},
-            {name:'订单管理',key:'订单管理',subSysMenus:[{name:'订单管理',url:'/storageManage'}]},
+            {name:'订单管理',key:'订单管理',subSysMenus:[{name:'订单管理',url:'/orderManage'}]},
             // {name:'仓储管理',key:'仓储管理',subSysMenus:[{name:'仓储管理',url:'/home'}]}
-            {name:'仓储管理',key:'仓储管理',subSysMenus:[{name:'仓库管理',url:'/storeManagement'}]},
+            {name:'仓储管理',key:'仓储管理',subSysMenus:[{name:'仓库管理',url:'/storeManagement'}]}
+            // {name:'警戒管理',key:'警戒管理',subSysMenus:[{name:'警戒管理',url:'/warnMessage'}]}
           ]
         }
       }
+    },
+    toWarnMessage() {
+      this.$router.push('/warnMessage')
+      this.defaultOpenedsArray = []
+      window.sessionStorage.setItem('defaultActive','/warnMessage')
+    },
+    // 定时请求
+    warnMessage(){
+      // console.log(12)
+      // console.log(this.timer)
+      this.$get('/inventory/alarm',{
+        ...this.getWarnMessageParams
+      }).then((data)=>{
+        // console.log(data.data.list)
+        console.log(data)
+        this.warnMessageValue = data.data.total
+        // this.rukuList = data.data.list
+        // this.warnMessageList = data.data.list
+        // this.total = data.data.total
+        // console.log(this.total)
+      })
     }
   },
   mounted() {
     this.setPath();
+  },
+  updated() {
+    this.defaultActive = window.sessionStorage.getItem('defaultActive')
   },
   computed: {
     ...mapGetters(["user"])
@@ -196,5 +251,11 @@ export default {
   position: fixed;
   right: 32px;
   top: 20px;
+}
+.home .leftNav .warnMessage{
+  color: #fff;
+  /* background: #1890ff; */
+  cursor: pointer;
+  padding-left: 20px;
 }
 </style>
