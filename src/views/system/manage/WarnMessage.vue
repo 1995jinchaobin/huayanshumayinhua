@@ -96,8 +96,7 @@ export default {
         path: '/fabricManage',
         name:'FabricManage',
         params: {  
-            key: a.fabricId
-            // msgKey: this.msg  
+          key: a.fabricId
         }
       })
       window.sessionStorage.setItem('defaultActive','/fabricManage')
@@ -108,8 +107,7 @@ export default {
         path: '/storeManagement',
         name:'StoreManagement',
         params: {  
-            key: a.inventoryId 
-            // msgKey: this.msg  
+          key: a.inventoryId
         }
       })
       window.sessionStorage.setItem('defaultActive','/storeManagement')

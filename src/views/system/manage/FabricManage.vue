@@ -198,14 +198,14 @@
               </el-col>
               <el-col :span="10" :offset="1">
                 <el-form-item label="所属客户:">
-                    <el-select v-model="customerName" placeholder="请选择" v-if="operateType == 'add'">
+                    <el-select v-model="customerName" placeholder="请选择" v-if="operateType == 'add'" filterable>
                       <el-option
                         v-for="item in userList"
                         :key="item.id"
                         :value="item.name">
                       </el-option>
                     </el-select>
-                    <el-select v-model="detailInfo.customerName" placeholder="请选择" v-else>
+                    <el-select v-model="detailInfo.customerName" placeholder="请选择" v-else filterable>
                       <el-option
                         v-for="item in userList"
                         :key="item.id"
@@ -437,12 +437,19 @@
     created(){
       console.log(this.$route.params)
       if (this.$route.params.key!==undefined){
-      this.dataKey = this.$route.params.key
-      console.log(this.$route.params.key)
-      this.getDataOfKey()
-    } else {
-      this.getData()
-    }
+        this.dataKey = this.$route.params.key
+        console.log(this.$route.params.key)
+        this.getDataOfKey()
+      } else {
+        this.getData()
+      }
+      if(this.$route.params.addKey){
+        this.customerName = this.$route.params.addKey
+        this.updateDrawer = true
+      }
+      if(this.$route.params.toKey){
+        this.updateDrawer = true
+      }
     },
     mounted() {
       // this.getData();

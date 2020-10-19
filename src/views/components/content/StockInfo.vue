@@ -94,7 +94,10 @@
             </el-select>
           </el-form-item>
           <el-form-item label="面料品类:" prop="fkFabricId">
-            <el-select v-model="addStockParams.fkFabricId" placeholder="请选择">
+            <el-select v-model="addStockParams.fkFabricId" placeholder="请选择" filterable>
+              <div slot="empty" @click="toAddMianliao" class="toAddMianliao">
+                添加面料
+              </div>
               <el-option
                 v-for="item in categoryList"
                 :key="item.id"
@@ -339,6 +342,35 @@ export default {
       this.getUserList()
       // this.getCategory()
       this.drawer = true
+    },
+    // 跳转到面料管理页面
+    toAddMianliao () {
+      console.log(this.addStockParams.fkCustomerId)
+      console.log(this.userList)
+      if (this.addStockParams.fkCustomerId!==''){
+        const index = this.userList.findIndex(item => {
+          return item.id === this.addStockParams.fkCustomerId
+        })
+        console.log(index)
+        const key = this.userList[index].name
+        console.log(key)
+        this.$router.push({
+          path:'/fabricManage',
+          name:'FabricManage',
+          params: {  
+            addKey: key
+          }
+        })
+      } else{
+        this.$router.push({
+          path:'/fabricManage',
+          name:'FabricManage',
+          params: {  
+            toKey: '1'
+          }
+        })
+      }
+      window.sessionStorage.setItem('defaultActive','/fabricManage')
     },
     // 关闭新增入库清空数据
     closeAddStockDrawer() {
@@ -610,5 +642,9 @@ export default {
   .stockInfo .lookUrl{
     width: 100%;
     position: absolute;
+  }
+  .toAddMianliao{
+    padding: 10px;
+    cursor: pointer;
   }
 </style>

@@ -81,10 +81,10 @@
               <span>{{rukuParams.customerName}}</span>
             </el-form-item>
             <el-form-item label="面料规格:">
-              <span>{{rukuParams.fabricName }}</span>
+              <span>{{rukuParams.fabricName}}</span>
             </el-form-item>
             <el-form-item label="未漂仓米数(米):">
-              <span>{{rukuParams.num }}</span>
+              <span>{{rukuParams.num}}</span>
             </el-form-item>
             <el-form-item label="未漂仓匹数(匹):">
               <span>{{rukuParams.rollNum}}</span>
@@ -93,7 +93,7 @@
               <span>{{rukuParams.statusName}}</span>
             </el-form-item>
             <el-form-item label="备注:">
-              <span>{{rukuParams.note }}</span>
+              <span>{{rukuParams.note}}</span>
             </el-form-item>
           </el-form>
         </div>

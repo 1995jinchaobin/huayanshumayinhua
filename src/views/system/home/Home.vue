@@ -31,7 +31,7 @@
               </el-menu-item-group>
             </el-submenu>
             <div class="warnMessage" @click="toWarnMessage" :style="defaultActive==='/warnMessage'?styleObject:''">
-              <span>警戒管理</span>
+              <span>警告</span>
               <el-badge :value="warnMessageValue" :max="99">
                 <!-- <span>警戒管理</span> -->
               </el-badge>
@@ -165,8 +165,7 @@ export default {
     },
     // 定时请求
     warnMessage(){
-      // console.log(12)
-      // console.log(this.timer)
+      if (this.$route.path==='/') return
       this.$get('/inventory/alarm',{
         ...this.getWarnMessageParams
       }).then((data)=>{
