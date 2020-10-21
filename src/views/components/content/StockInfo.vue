@@ -1,8 +1,8 @@
 <template>
   <div class="stockInfo">
     <div class="tagSearch">
-      <storeManageSearch ref="storeSearch" @searchList="searchList">
-        <template v-slot:one><el-button plain v-print="'#printArea1'">导&nbsp;&nbsp;出</el-button></template>
+      <storeManageSearch ref="storeSearch" @searchList="searchList" @daochu="daochu">
+          <!-- <el-button plain @daochu="daochuStockInfo">导&nbsp;&nbsp;出</el-button> -->
         <!-- <el-button @click="onSubmit" plain>导&nbsp;&nbsp;出</el-button> -->
       </storeManageSearch>
       <div>
@@ -10,7 +10,6 @@
       </div> 
     </div>
     <el-table
-      id="printArea1"
       :data="tableData"
       border
       :header-cell-style="headFirst">
@@ -199,6 +198,8 @@
 import axios from 'axios'
 import messageUtil from '../../../utils/js/MessageUtil'
 import StoreManageSearch from '../common/StoreManageSearch'
+// import { delete } from 'vue/types/umd'
+// import { delete } from 'vue/types/umd'
 // import ImgUpload from '../common/ImgUpload'
 export default {
   components: {
@@ -556,6 +557,90 @@ export default {
         // console.log(this.total)
         console.log(this.tableData)
       })
+    },
+    // 导出库存信息
+    daochu(a){
+      console.log(a)
+      delete a.page
+      delete a.rows
+      for (let para in a){
+        // console.log(para)
+        // console.log(a[para])
+        if (a[para].trim()===''){
+          delete a[para]
+          // console.log(1)
+        }
+      }
+      console.log(a)
+      let urlAdd = ''
+      // for (let aa of a){
+      //   console.log(aa)
+      // }
+      // if (a.customerName&&urlAdd!==''){
+      //   urlAdd+='&customerName='+ a.customerName
+      // }
+      // if(a.endTime&&urlAdd!==''){
+      //   urlAdd+='&endTime='+ a.endTime
+      // }
+      // if(a.name&&urlAdd!==''){
+      //   urlAdd+='&name='+ a.name
+      // }
+      // if(a.startTime&&urlAdd!==''){
+      //   urlAdd+='&startTime='+ a.startTime
+      // }
+      // if (a.customerName&&urlAdd===''){
+      //   urlAdd+='customerName='+ a.customerName
+      // }
+      // if(a.endTime&&urlAdd===''){
+      //   urlAdd+='endTime='+ a.endTime
+      // }
+      // if(a.name&&urlAdd===''){
+      //   urlAdd+='name='+ a.name
+      // }
+      // if(a.startTime&&urlAdd===''){
+      //   urlAdd+='startTime='+ a.startTime
+      // }
+      if(a.customerName){
+        urlAdd+='customerName='+ a.customerName
+        if(a.name){
+          urlAdd+='&name='+ a.name
+        }
+        if(a.startTime){
+          urlAdd+='&startTime='+ a.startTime
+          urlAdd+='&endTime='+ a.endTime
+        }
+      }else{
+        urlAdd = ''
+        if(a.name){
+          urlAdd+='name='+ a.name
+          if(a.startTime){
+            urlAdd+='&startTime='+ a.startTime
+            urlAdd+='&endTime='+ a.endTime
+          }
+        }else{
+          urlAdd = ''
+          if(a.startTime){
+            urlAdd+='startTime='+ a.startTime
+            urlAdd+='&endTime='+ a.endTime
+          }
+        }
+      }
+      console.log(urlAdd)
+      console.log(this.$baseUrl)
+      let url = ''
+      if(urlAdd===''){
+        url = this.$baseUrl + '/inventory/order/export'
+      } else{
+        url = this.$baseUrl + '/inventory/order/export?' + urlAdd
+      }
+      console.log(url)
+      window.open(url)
+      // let baseUrl = 'http://192.168.1.115:9999'
+      // this.$get('/inventory/order/export',{
+      //   ...a
+      // }).then((data)=>{
+      //   console.log(data)
+      // })
     }
   },
   created(){

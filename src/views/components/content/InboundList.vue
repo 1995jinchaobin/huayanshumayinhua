@@ -383,4 +383,7 @@ export default {
     /* bottom: 40px; */
     margin-top: 50px;
   }
+  /* .el-table__header-wrapper th:first-child .cell .el-checkbox{
+    display: none;
+  } */
 </style>
