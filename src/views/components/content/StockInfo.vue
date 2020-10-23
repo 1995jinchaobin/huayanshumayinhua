@@ -144,14 +144,16 @@
           <!-- <el-form-item label="上传码单(选项):">
           </el-form-item>  -->
         </el-form>
-        <el-button type="primary" @click="saveAddShangJiang">保存</el-button>
-        <el-button type="primary" @click="closeCheckShangJiang">取消</el-button>
+        <div class="shangjiangTiaoboBtn">
+          <el-button type="primary" @click="saveAddShangJiang">保存</el-button>
+          <el-button type="primary" @click="closeCheckShangJiang">取消</el-button>
+        </div>
       </el-drawer>
     </div>
     <!-- 编辑入库信息 -->
     <div>
       <el-drawer  title="编辑" :visible.sync="checkVisible" :before-close="closeCheckDrawer">
-        <div>
+        <div class="bianjiKucunInfo">
           <!-- <el-divider content-position="left"></el-divider> -->
           <el-form :model="checkInfo" ref="checkInfoRef" label-width="140px" :rules="checkInfoRules">
             <!-- <el-row> -->
@@ -186,8 +188,10 @@
               <el-input v-model="checkInfo.num3" type="text" placeholder="请输入成品仓(匹/米)"></el-input>
             </el-form-item> -->
           </el-form>
-          <el-button @click="checkStockInfo" size="mini" type="primary">保存</el-button>
-          <el-button size="mini" type="primary" @click="closeCheckDrawer">取消</el-button>
+          <div class="storeManageCheckStockBtn">
+            <el-button @click="checkStockInfo" size="mini" type="primary">保存</el-button>
+            <el-button size="mini" type="primary" @click="closeCheckDrawer">取消</el-button>
+          </div>
         </div>
       </el-drawer>
     </div>
@@ -731,5 +735,15 @@ export default {
   .toAddMianliao{
     padding: 10px;
     cursor: pointer;
+  }
+  .storeManageCheckStockBtn, .shangjiangTiaoboBtn{
+    display: flex;
+    justify-content: center;
+  }
+  .storeManageCheckStockBtn .el-button, .shangjiangTiaoboBtn .el-button{
+    margin: auto 30px;
+  }
+  .bianjiKucunInfo .el-form{
+    margin: auto 10px;
   }
 </style>

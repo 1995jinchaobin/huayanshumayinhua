@@ -75,7 +75,7 @@
     <div class="mingXi">
       <el-drawer  :title="'客户名:'+mingXiInfo.customerName " :visible.sync="mingXiVisible" :before-close="closeMingXiDrawer" size="50%">
         <div class="mingXiInfo">
-          <el-form label-width="120px" :model="mingXiInfo">
+          <el-form label-width="140px" :model="mingXiInfo">
             <el-form-item label="创建时间:">
               <span>{{mingXiInfo.createTime}}</span>
             </el-form-item>

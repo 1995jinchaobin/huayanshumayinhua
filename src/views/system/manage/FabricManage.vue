@@ -367,6 +367,7 @@
           customerName: ''
         };
         this.customerName = '';
+        this.$refs.fabricForm.resetFields()
       },
       //点击保存按钮
       add(){
@@ -491,7 +492,7 @@
 
   .fabricManageContent .data {
     width: calc(100%);
-    min-height: calc(100% - 64px);
+    min-height: calc(100% - 112px);
     height: auto;
     padding: 24px 24px 24px 24px;
     background-color: #F0F3F7;

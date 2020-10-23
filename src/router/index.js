@@ -40,6 +40,12 @@ export default new Router({
           name: 'FabricManage',
           component: resolve => require(['@/views/system/manage/FabricManage'],resolve)
         },
+        // 瑕疵管理
+        {
+          path:'/flaw',
+          name: 'Flaw',
+          component: resolve => require(['@/views/system/manage/Flaw'],resolve)
+        },
         //机器管理
         {
           path:'/machineManage',
