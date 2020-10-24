@@ -321,6 +321,7 @@ export default {
           //处理
           this.orderCompleteData = echarts.init(document.getElementById('orderCompleteData'));
           this.orderCompleteData.setOption(sellCountOption);
+          // console.log(this.orderCompleteData)
         })
       });
     },

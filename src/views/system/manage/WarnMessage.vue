@@ -72,12 +72,12 @@ export default {
   methods:{
     // 获取警报列表
     getWarnMessageList () {
-      console.log(this.rukuParams)
+      // console.log(this.rukuParams)
       this.$get('/inventory/alarm',{
         ...this.getWarnMessageParams
       }).then((data)=>{
-        console.log(data.data.list)
-        console.log(data)
+        // console.log(data.data.list)
+        // console.log(data)
         // this.rukuList = data.data.list
         this.warnMessageList = data.data.list
         this.total = data.data.total
@@ -91,7 +91,7 @@ export default {
     },
     // 点击面料按钮
     toMianliao(a){
-      console.log(a,'面料按钮')
+      // console.log(a,'面料按钮')
       this.$router.push({  
         path: '/fabricManage',
         name:'FabricManage',

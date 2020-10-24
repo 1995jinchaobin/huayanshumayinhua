@@ -53,7 +53,7 @@
             </el-table-column>
             <el-table-column align="center" :show-overflow-tooltip="true" prop="orderDetails" label="花型号">
               <template slot-scope='scope'>
-                <span v-for="(item,index) in scope.row.orderDetails" :key="index">{{item.flowerNum}}{{index+1 < scope.row.orderDetails.length ? ',' : ''}}</span>
+                <span v-for="(item,index) in scope.row.orderDetails" :key="index">{{item.flowerNum}}{{scope.row.orderDetails.length >index+1 ? ',' : ''}}</span>
               </template>
             </el-table-column>
             <el-table-column align="center" :show-overflow-tooltip="true" prop="okMeter" label="合格米数">
@@ -431,7 +431,7 @@
                     <td colspan="3" width="46%">{{detailInfo.configName}}</td>
                     <td width="12%">打印组长：</td>
                     <td colspan="3"  width="30%">
-                      <label style="font-size: 16px;" v-if="printItem.type=='3'" v-for="printItem in detailInfo.orderOperations" :key="printItem.fkUserId" >{{printItem.userName}}</label>
+                      <label style="font-size: 16px;" v-for="(printItem,index) in detailInfo.orderOperations" :key="index" >{{printItem.type=='3'?printItem.userName:''}}</label>
                     </td>
                   </tr>
                   <tr>
@@ -754,7 +754,7 @@
           //  let baseUrl = 'https://www.yinhuachaoshi.com/order'//线上地址
            let url = `/order/export?startTime=${this.searchParams.startTime}&endTime=${this.searchParams.endTime}`;
            window.open(baseUrl + url,'_block');
-           console.log(baseUrl + url,'_block')
+          //  console.log(baseUrl + url,'_block')
          }
       }
     },

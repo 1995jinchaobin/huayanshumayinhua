@@ -91,7 +91,7 @@ export default {
   methods: {
     // 搜索重置
     resetSearch(){
-      console.log('重置')
+      // console.log('重置')
       this.searchInfo = {
         page:1,
         rows:10,
@@ -100,16 +100,16 @@ export default {
         startTime:'',
         endTime:''
       }
-      console.log(this.searchInfo)
+      // console.log(this.searchInfo)
       this.time = []
       this.$refs.searchForm.resetFields()
-      console.log(this.searchInfo)
+      // console.log(this.searchInfo)
       this.$emit('searchList',this.searchInfo)
     },
     // 搜索
     searchList() {
-      console.log(this.searchInfo);
-      console.log(this.time)
+      // console.log(this.searchInfo);
+      // console.log(this.time)
       if (this.searchInfo.time === undefined) {
         delete this.searchInfo.time
       }
@@ -117,19 +117,19 @@ export default {
         this.searchInfo.startTime = this.time[0]
         this.searchInfo.endTime = this.time[1]
       }
-      console.log(this.searchInfo);
+      // console.log(this.searchInfo);
       this.$emit('searchList',this.searchInfo)
     },
     getRegionlist(){
       if (this.regionlist.length > 0) return
-      console.log('获取面料列表')
+      // console.log('获取面料列表')
       this.$get('/fabric',{
         page:1,
         rows:999999
         // this.params
         // fkCustomerId:this.addStockParams.fkCustomerId
       }).then((data)=>{
-        console.log(data)
+        // console.log(data)
         this.regionlist = data.data.list
         // this.categoryList = data.data;
         // console.log(this.categoryList)
@@ -144,7 +144,7 @@ export default {
         this.searchInfo.startTime = this.time[0]
         this.searchInfo.endTime = this.time[1]
       }
-      console.log(this.searchInfo)
+      // console.log(this.searchInfo)
       this.$emit('daochu',this.searchInfo)
     }
   }

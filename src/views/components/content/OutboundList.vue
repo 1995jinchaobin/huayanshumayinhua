@@ -75,6 +75,32 @@
     <div class="mingXi">
       <el-drawer  :title="'客户名:'+mingXiInfo.customerName " :visible.sync="mingXiVisible" :before-close="closeMingXiDrawer" size="50%">
         <div class="mingXiInfo">
+          <el-table
+            :data="mingxiTable"
+            height="250"
+            border
+            style="width: 100%">
+            <el-table-column
+              prop="roll"
+              label="匹号">
+            </el-table-column>
+            <el-table-column
+              prop="num"
+              label="合格米数">
+            </el-table-column>
+            <el-table-column
+              label="状态">
+              <template slot-scope="scope">
+                <span v-if="scope.row.status===0">未出库</span>
+                <span v-else-if="scope.row.status===1">已出库</span>
+                <span v-else>出库中</span>
+              </template>
+            </el-table-column>
+            <el-table-column
+              prop="note"
+              label="备注">
+            </el-table-column>
+          </el-table>
           <el-form label-width="140px" :model="mingXiInfo">
             <el-form-item label="创建时间:">
               <span>{{mingXiInfo.createTime}}</span>
@@ -311,7 +337,8 @@ export default {
       addnum:0,
       // 客户名称
       kehuName:'',
-      tableDayin:[]
+      tableDayin:[],
+      mingxiTable:[]
     }
   },
   methods: {
@@ -320,8 +347,8 @@ export default {
       this.$get('/inventory/out/list',{
         ...this.chukuParams
       }).then((data)=>{
-        console.log(data.data.list)
-        console.log(data)
+        // console.log(data.data.list)
+        // console.log(data)
         this.chukuList = data.data.list
         // this.tableData = data.data.list
         this.total = data.data.total
@@ -345,14 +372,38 @@ export default {
     },
     // 触发搜索
     searchList(value){
-      console.log(value)
+      // console.log(value)
       this.chukuParams = value
       this.getChukuList()
     },
     // 明细按钮
     mingXi(value) {
-      console.log(value)
+      // console.log(value)
       this.mingXiInfo = value
+      const params = {
+          id:value.id
+        }
+      this.$get('/inventory/out/detail/list',{
+          ...params
+        }).then(res => {
+          console.log(res.data)
+          this.mingxiTable = res.data
+          // a.nums = res.data
+          // let totalNum = 0
+          // for (let objs of a.nums) {
+          //   totalNum+=objs.num
+          // }
+          // a.totalNum = totalNum
+          // const numsLength = 9 - a.nums.length % 9
+          // // console.log(numsLength)
+          // for (let ab = 0;ab<numsLength;ab++){
+          //   a.nums.push({num:''})
+          // }
+          // console.log(a)
+          // this.tableDayin.push(a)
+          // this.chukKuDialogVisible = true
+          this.mingXiVisible = true
+        })
       // const mingxiParams = {
       //   id:value.id
       // }
@@ -362,11 +413,12 @@ export default {
       //     console.log(res)
       //   })
       // this.customerName = value.customerName
-      this.mingXiVisible = true
+
+      // this.mingXiVisible = true
     },
     // 打印按钮
     daYin(a) {
-      console.log(a)
+      // console.log(a)
       this.timeData = format(new Date(), 'YYYY-MM-DD HH:mm:ss')
       this.kehuName = a.customerName
       this.tableDayin = []
@@ -384,20 +436,20 @@ export default {
         this.$get('/inventory/out/detail/list',{
           ...params
         }).then(res => {
-          console.log(res.data)
+          // console.log(res.data)
           a.nums = res.data
           let totalNum = 0
           for (let objs of a.nums) {
-            console.log(objs)
+            // console.log(objs)
             totalNum+=objs.num
           }
           a.totalNum = totalNum
           const numsLength = 9 - a.nums.length % 9
-          console.log(numsLength)
+          // console.log(numsLength)
           for (let ab = 0;ab<numsLength;ab++){
             a.nums.push({num:''})
           }
-          console.log(a)
+          // console.log(a)
           this.tableDayin.push(a)
           this.chukKuDialogVisible = true
         })
@@ -418,10 +470,10 @@ export default {
     },
     // 表格前选中
     handleSelectionChange(rows){
-      console.log(rows)
+      // console.log(rows)
       const length = rows.length
       if (length>1) {
-        console.log(rows[length-1].customerName)
+        // console.log(rows[length-1].customerName)
         if(rows[length-1].customerName!==rows[length-2].customerName){
           this.$refs.multipleTable.toggleRowSelection(rows[length-1])
           this.tableDayin = rows.pop()
@@ -438,7 +490,7 @@ export default {
     // 合并打印
     hebingDayin(){
       this.addnum = 0
-      console.log(this.tableDayin)
+      // console.log(this.tableDayin)
       const hebingLength = this.tableDayin.length
       if(hebingLength>0){
         this.timeData = format(new Date(), 'YYYY-MM-DD HH:mm:ss')
@@ -462,7 +514,7 @@ export default {
               this.tableDayin[timeS].nums = res.data
               let totalNum = 0
               for (let obj of this.tableDayin[timeS].nums) {
-                console.log(obj)
+                // console.log(obj)
                 totalNum+=obj.num
               }
               this.tableDayin[timeS].totalNum = totalNum

@@ -18,7 +18,7 @@ export default {
    created(){
     
      this.$get('/machine').then((data)=>{
-          console.log(data);
+         //  console.log(data);
          
         })
    }

@@ -95,7 +95,7 @@ export default {
     };
   },
   created() {
-    this.warnMessage()
+    // this.warnMessage()
     this.timer = setInterval(this.warnMessage,10000)
     this.defaultActive = window.sessionStorage.getItem('defaultActive')
   },
@@ -170,7 +170,7 @@ export default {
         ...this.getWarnMessageParams
       }).then((data)=>{
         // console.log(data.data.list)
-        console.log(data)
+        // console.log(data)
         this.warnMessageValue = data.data.total
         // this.rukuList = data.data.list
         // this.warnMessageList = data.data.list

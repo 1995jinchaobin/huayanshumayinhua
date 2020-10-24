@@ -73,27 +73,27 @@
     <div>
       <el-drawer :visible.sync="rukuDrawer" :before-close="closeRukuDrawer">
         <div class="rukeInfo">
-          <el-form label-width="120px" :model="rukuParams">
+          <el-form label-width="120px" :model="rukuParamsInfo">
             <el-form-item label="日期:">
-              <span>{{rukuParams.createTime}}</span>
+              <span>{{rukuParamsInfo.createTime}}</span>
             </el-form-item>
             <el-form-item label="客户名:">
-              <span>{{rukuParams.customerName}}</span>
+              <span>{{rukuParamsInfo.customerName}}</span>
             </el-form-item>
             <el-form-item label="面料规格:">
-              <span>{{rukuParams.fabricName}}</span>
+              <span>{{rukuParamsInfo.fabricName}}</span>
             </el-form-item>
             <el-form-item label="未漂仓米数(米):">
-              <span>{{rukuParams.num}}</span>
+              <span>{{rukuParamsInfo.num}}</span>
             </el-form-item>
             <el-form-item label="未漂仓匹数(匹):">
-              <span>{{rukuParams.rollNum}}</span>
+              <span>{{rukuParamsInfo.rollNum}}</span>
             </el-form-item>
             <el-form-item label="状态:">
-              <span>{{rukuParams.statusName}}</span>
+              <span>{{rukuParamsInfo.statusName}}</span>
             </el-form-item>
             <el-form-item label="备注:">
-              <span>{{rukuParams.note}}</span>
+              <span>{{rukuParamsInfo.note}}</span>
             </el-form-item>
           </el-form>
         </div>
@@ -171,18 +171,18 @@ export default {
       rukuList: [],
       total: 0,
       rukuDrawer: false,
-      rukuParams: {}
+      rukuParamsInfo: {}
     }
   },
   methods: {
     // 获取入库列表
     getRukuList () {
-      console.log(this.rukuParams)
+      // console.log(this.rukuParams)
       this.$get('/inventory/in/list',{
         ...this.rukuParams
       }).then((data)=>{
-        console.log(data.data.list)
-        console.log(data)
+        // console.log(data.data.list)
+        // console.log(data)
         this.rukuList = data.data.list
         // this.tableData = data.data.list
         this.total = data.data.total
@@ -203,26 +203,26 @@ export default {
     },
     // 搜索触发
     searchList (value) {
-      console.log(value)
+      // console.log(value)
       this.rukuParams = value
       this.getRukuList()
     },
     // 入库明细按钮
     rukuInfoBtn (value) {
-      console.log(value)
-      this.rukuParams = value
+      // console.log(value)
+      this.rukuParamsInfo = value
       this.rukuDrawer = true
     },
     // 入库上传码单按钮
     upLoadMadan (a) {
-      console.log(a)
+      // console.log(a)
       this.upMadanParamsId = a.id
       this.upMadan = a.customerName
       this.upmadanDrawer =true
     },
     // 查看码单按钮
     lookMadan (a) {
-      console.log(a)
+      // console.log(a)
       this.lookMadanName = a.customerName
       this.madanUrl = a.url
       this.madanDrawer = true
@@ -242,12 +242,12 @@ export default {
     },
     // 上传码单
     changeImg(a) {
-      console.log('上传图片')
+      // console.log('上传图片')
       // 获取图片
       const fr = new FileReader()
       fr.readAsDataURL(a.target.files[0])
       fr.onload = e=> {
-        console.log(e.target.result)
+        // console.log(e.target.result)
         this.lookUrl = e.target.result
       }
       this.file = document.getElementById("imgFile").files[0]
@@ -267,7 +267,7 @@ export default {
     // 获取码单url地址
     getMadanUrl() {
       axios.post('/file',this.formData).then(res=>{
-        console.log(res)
+        // console.log(res)
         if (res.data.code ===0){
           this.upMadanParams.url = res.data.data
         }
@@ -277,11 +277,11 @@ export default {
     baocunMadan () {
       // this.getMadanUrl()
       axios.post('/file',this.formData).then(res=>{
-        console.log(res)
+        // console.log(res)
         if (res.data.code ===0){
           this.upMadanParams.url = res.data.data
           this.$put('/inventory/in/'+this.upMadanParamsId,this.upMadanParams).then((data)=>{
-          console.log(data)
+          // console.log(data)
           messageUtil.message.success(data.message)
           this.closeupMadanDrawer();
           this.getRukuList();
@@ -289,8 +289,8 @@ export default {
         }
       })
 
-      console.log(this.upMadanParamsId)
-      console.log(this.upMadanParams)
+      // console.log(this.upMadanParamsId)
+      // console.log(this.upMadanParams)
       // this.$put('/inventory/in/'+this.upMadanParamsId,this.upMadanParams).then((data)=>{
       // console.log(data)
       // messageUtil.message.success(data.message)
@@ -323,7 +323,7 @@ export default {
     }
   },
   created () {
-    console.log(1)
+    // console.log(this.rukuParams)
     this.getRukuList()
   }
 }

@@ -310,15 +310,15 @@ export default {
   methods:{
     // 获取仓库列表数据
     getData() {
-      console.log(this.sreachpage)
+      // console.log(this.sreachpage)
       this.$get('/inventory/list',{
         ...this.sreachpage
       }).then((data)=>{
-        console.log(data.data.list)
-        console.log(data)
+        // console.log(data.data.list)
+        // console.log(data)
         this.tableData = data.data.list
         this.total = data.data.total
-        console.log(this.total)
+        // console.log(this.total)
         // this.page.total = data.data.total;
       })
       // const a = this.axios.get('http://192.168.1.115:9999/inventory/list',{params:this.sreachpage})
@@ -326,7 +326,7 @@ export default {
     },
     // 搜索
     searchList(value) {
-      console.log(value)
+      // console.log(value)
       this.sreachpage = value
       this.getData()
     },
@@ -350,15 +350,15 @@ export default {
     },
     // 跳转到面料管理页面
     toAddMianliao () {
-      console.log(this.addStockParams.fkCustomerId)
-      console.log(this.userList)
+      // console.log(this.addStockParams.fkCustomerId)
+      // console.log(this.userList)
       if (this.addStockParams.fkCustomerId!==''){
         const index = this.userList.findIndex(item => {
           return item.id === this.addStockParams.fkCustomerId
         })
-        console.log(index)
+        // console.log(index)
         const key = this.userList[index].name
-        console.log(key)
+        // console.log(key)
         this.$router.push({
           path:'/fabricManage',
           name:'FabricManage',
@@ -379,7 +379,7 @@ export default {
     },
     // 关闭新增入库清空数据
     closeAddStockDrawer() {
-      console.log('关闭')
+      // console.log('关闭')
       this.$refs.addStockParamsRef.resetFields()
       this.$refs.upBiaodan.reset()
       this.file = ''
@@ -393,25 +393,25 @@ export default {
         page:1,
         rows:99999
       }).then((data)=>{
-        console.log(data)
+        // console.log(data)
         this.userList = data.data.list;
       })
     },
     // 选择客户名获取其ID
     getUserId() {
       this.addStockParams.fkFabricId = ''
-      console.log(this.addStockParams.fkCustomerId)
+      // console.log(this.addStockParams.fkCustomerId)
       this.getCategory()
     },
     // 面料品类
     getCategory() {
-      console.log(this.addStockParams.fkCustomerId)
+      // console.log(this.addStockParams.fkCustomerId)
       this.$get('/fabric/select',{
         fkCustomerId:this.addStockParams.fkCustomerId
       }).then((data)=>{
-        console.log(data)
+        // console.log(data)
         this.categoryList = data.data;
-        console.log(this.categoryList)
+        // console.log(this.categoryList)
       })
     },
     // 保存新增入库（无码单）
@@ -419,9 +419,9 @@ export default {
       // this.$refs.addStockParamsRef.validate(value => {
       //   console.log(value)
       //   if (!value) return
-      console.log(this.addStockParams)
+      // console.log(this.addStockParams)
       this.$post('/inventory/in/add',this.addStockParams).then((data)=>{
-      console.log(data)
+      // console.log(data)
       if (data.code!==0) return messageUtil.message.error(data.message)
       messageUtil.message.success(data.message)
       // this.closeCheckDrawer();
@@ -435,34 +435,34 @@ export default {
       this.$refs.addStockParamsRef.validate(value => {
         if (!value) return
         if(this.file!=='') {
-        console.log('有码单图片')
+        // console.log('有码单图片')
         this.changChuanImg()
         setTimeout(()=>{
           this.saveAddStockNo()
           },500
         )
         // this.saveAddStockNo()
-        console.log('结束')
+        // console.log('结束')
       } else{
-        console.log('无码单图片')
+        // console.log('无码单图片')
         this.saveAddStockNo()
       }
       })
     },
     // 上传图片(缓存)
     changeImg(a) {
-      console.log('上传图片')
+      // console.log('上传图片')
       // console.log(a.target)
       // const file1 = a.target.files[0]
       const fr = new FileReader()
       fr.readAsDataURL(a.target.files[0])
       fr.onload = e=> {
-        console.log(e.target.result)
+        // console.log(e.target.result)
         this.lookUrl = e.target.result
       }
       // 获取图片
       this.file = document.getElementById("imgFile").files[0]
-      console.log(this.file)
+      // console.log(this.file)
       this.formData = new FormData()
       // if (file) {
       this.formData.append('file', this.file);　　
@@ -475,7 +475,7 @@ export default {
     // 上传图片
     changChuanImg() {
       axios.post('/file',this.formData).then(res=>{
-        console.log(res)
+        // console.log(res)
         // messageUtil.message.success(res.data.message)
         if (res.data.code ===0){
           console.log(this.drawer)
@@ -487,8 +487,8 @@ export default {
     },
     // 上浆调拨
     sizingAllocation(value) {
-      console.log('上浆调拨')
-      console.log(value)
+      // console.log('上浆调拨')
+      // console.log(value)
       this.addSizingTitle = value.customerName
       this.shangJiangRollNumMax = value.rollNum
       this.shangJiangNumMax = value.num1
@@ -503,13 +503,13 @@ export default {
     },
     // 保存上浆调拨
     saveAddShangJiang() {
-      console.log(this.addShangJiangParams)
+      // console.log(this.addShangJiangParams)
       this.$refs.addShangJiangParamsRef.validate(value => {
-        console.log(value)
+        // console.log(value)
         if (!value) return
         // console.log(this.addShangJiangParams)
         this.$post('/inventory/transfer',this.addShangJiangParams).then((data)=>{
-        console.log(data)
+        // console.log(data)
         messageUtil.message.success(data.message)
         this.closeCheckShangJiang()
         this.getData()
@@ -518,7 +518,7 @@ export default {
     },
     // 编辑入库信息按钮
     checkStock(value) {
-      console.log(value)
+      // console.log(value)
       this.checkInfo = JSON.parse(JSON.stringify(value))
       this.checkVisible = true
     },
@@ -528,7 +528,7 @@ export default {
     },
     // 保存编辑
     checkStockInfo() {
-      console.log(this.checkInfo)
+      // console.log(this.checkInfo)
       const a = {
         id:this.checkInfo.id,
         rollNum:this.checkInfo.rollNum,
@@ -538,9 +538,9 @@ export default {
         // num4:this.checkInfo.num4,
         // sizingExpectNum:this.checkInfo.sizingExpectNum
       }
-      console.log(a)
+      // console.log(a)
       this.$put('/inventory/'+this.checkInfo.id,a).then((data)=>{
-        console.log(data)
+        // console.log(data)
         messageUtil.message.success(data.message)
         this.closeCheckDrawer()
         this.getData()
@@ -550,21 +550,21 @@ export default {
     getDataOfKey () {
       this.$get('/inventory/'+this.dataKey).then((data)=>{
         // console.log(data.data.list)
-        console.log(data.data)
+        // console.log(data.data)
         // this.rukuList = data.data.list
         const a = new Array()
         a[0] = data.data
-        console.log(a)
+        // console.log(a)
         // a[0] = data.data
         this.tableData = a
         // this.total = data.data.total
         // console.log(this.total)
-        console.log(this.tableData)
+        // console.log(this.tableData)
       })
     },
     // 导出库存信息
     daochu(a){
-      console.log(a)
+      // console.log(a)
       delete a.page
       delete a.rows
       for (let para in a){
@@ -575,7 +575,7 @@ export default {
           // console.log(1)
         }
       }
-      console.log(a)
+      // console.log(a)
       let urlAdd = ''
       // for (let aa of a){
       //   console.log(aa)
@@ -629,15 +629,15 @@ export default {
           }
         }
       }
-      console.log(urlAdd)
-      console.log(this.$baseUrl)
+      // console.log(urlAdd)
+      // console.log(this.$baseUrl)
       let url = ''
       if(urlAdd===''){
         url = this.$baseUrl + '/inventory/order/export'
       } else{
         url = this.$baseUrl + '/inventory/order/export?' + urlAdd
       }
-      console.log(url)
+      // console.log(url)
       window.open(url)
       // let baseUrl = 'http://192.168.1.115:9999'
       // this.$get('/inventory/order/export',{
@@ -661,8 +661,8 @@ export default {
     }
   },
   mounted() {
-    console.log(this.$refs)
-    console.log(this.$refs.storeSearch)
+    // console.log(this.$refs)
+    // console.log(this.$refs.storeSearch)
     this.$refs.storeSearch.getRegionlist()
     // this.$route.query = {}
   }

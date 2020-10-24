@@ -71,7 +71,13 @@
               Cookie.setItem("userType",1);
               localStorage.setItem("userType",data.data.role)
               messageUtil.message.success('登录成功，跳转中')
-              _this.$router.push({path: '/home'})
+              const gaoliang = window.sessionStorage.getItem('defaultActive')
+              if (gaoliang) {
+                _this.$router.push({path: gaoliang})
+              } else{
+                _this.$router.push({path: '/home'})
+                window.sessionStorage.setItem("defaultActive",'/orderManage')
+              }
             }else{
               this.$message.error('您没有权限，请联系厂长')
             }
