@@ -10,7 +10,6 @@ axios.defaults.timeout = 5000;
 //axios.defaults.baseURL = 'https://www.yinhuachaoshi.com/order';
 // 设置post请求头
 axios.defaults.headers.post['Content-Type'] = 'application/json;charset=UTF-8';
-
 // http 请求拦截
 axios.interceptors.request.use(
   config => {

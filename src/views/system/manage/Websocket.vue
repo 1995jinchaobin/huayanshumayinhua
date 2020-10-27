@@ -17,10 +17,10 @@ export default {
    },
    created(){
     
-     this.$get('/machine').then((data)=>{
+   //   this.$get('/machine').then((data)=>{
          //  console.log(data);
          
-        })
+      //   })
    }
 }
 </script>

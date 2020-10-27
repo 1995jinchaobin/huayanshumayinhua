@@ -6,61 +6,69 @@
         <el-button @click="hebingDayin">合并打印</el-button>
       </div>
     </div>
-    <el-table
-      ref="multipleTable"
-      :data="chukuList"
-      style="width: 100%"
-      border
-      stripe
-      :header-cell-style="headFirst"
-      @selection-change="handleSelectionChange">
-      <el-table-column
-        type="selection"
-        width="55">
-      </el-table-column>
-      <el-table-column
-        align="center"
-        prop="createTime"
-        label="日期">
-      </el-table-column>
-      <el-table-column
-        prop="customerName"
-        label="客户名"
-        align="center">
-      </el-table-column>
-      <el-table-column
-        prop="fabricName"
-        align="center"
-        label="品名">
-      </el-table-column>
-      <el-table-column
-        label="数量(匹/米)"
-        prop
-        align="center">
+    <div class="contentTable">
+      <el-table
+        ref="multipleTable"
+        :data="chukuList"
+        style="width: 100%"
+        border
+        stripe
+        :header-cell-style="headFirst"
+        @selection-change="handleSelectionChange">
         <el-table-column
-          prop="rollNum"
+          type="selection"
+          width="55">
+        </el-table-column>
+        <el-table-column
+          align="center"
+          prop="createTime"
+          label="日期">
+        </el-table-column>
+        <el-table-column
+          align="center"
+          prop="orderNo"
+          label="订单号">
+        </el-table-column>
+        <el-table-column
+          prop="customerName"
+          label="客户名"
           align="center">
         </el-table-column>
         <el-table-column
-          prop="num"
+          prop="fabricName"
+          align="center"
+          label="品名">
+        </el-table-column>
+        <el-table-column
+          label="数量(匹/米)"
+          prop
+          align="center">
+          <el-table-column
+            prop="rollNum"
+            align="center">
+          </el-table-column>
+          <el-table-column
+            prop="num"
+            align="center">
+          </el-table-column>
+        </el-table-column>
+        <el-table-column
+          prop="statusName"
+          label="状态"
           align="center">
         </el-table-column>
-      </el-table-column>
-      <el-table-column
-        prop="statusName"
-        label="状态"
-        align="center">
-      </el-table-column>
-      <el-table-column
-        label="操作"
-        width="280px"
-        align="center">
-        <template slot-scope="scope">
-          <el-button @click="mingXi(scope.row)" size="mini" type="primary">明细</el-button>
-          <el-button size="mini" type="primary" @click="daYin(scope.row)">打印</el-button>
-        </template>
-      </el-table-column>
-    </el-table>
+        <el-table-column
+          label="操作"
+          width="280px"
+          align="center">
+          <template slot-scope="scope">
+            <el-button @click="mingXi(scope.row)" size="mini" type="primary">明细</el-button>
+            <el-button @click="chuku(scope.row)" size="mini" type="primary">出库</el-button>
+            <el-button size="mini" type="primary" @click="daYin(scope.row)">打印</el-button>
+          </template>
+        </el-table-column>
+      </el-table>
+    </div>
     <!-- 底部分页 -->
     <div class="pagination" v-if="total > 10">
       <el-pagination
@@ -73,13 +81,12 @@
     </div>
     <!-- 明细抽屉 -->
     <div class="mingXi">
-      <el-drawer  :title="'客户名:'+mingXiInfo.customerName " :visible.sync="mingXiVisible" :before-close="closeMingXiDrawer" size="50%">
+      <el-drawer  :title="'订单号:'+mingXiInfo.orderNo " :visible.sync="mingXiVisible" :before-close="closeMingXiDrawer" size="50%">
         <div class="mingXiInfo">
           <el-table
             :data="mingxiTable"
-            height="250"
-            border
-            style="width: 100%">
+            max-height="350"
+            border>
             <el-table-column
               prop="roll"
               label="匹号">
@@ -92,16 +99,19 @@
               label="状态">
               <template slot-scope="scope">
                 <span v-if="scope.row.status===0">未出库</span>
-                <span v-else-if="scope.row.status===1">已出库</span>
-                <span v-else>出库中</span>
+                <span v-else>已出库</span>
               </template>
             </el-table-column>
             <el-table-column
               prop="note"
               label="备注">
             </el-table-column>
+            <el-table-column
+              prop="xiaci"
+              label="瑕疵类型(位置)">
+            </el-table-column>
           </el-table>
-          <el-form label-width="140px" :model="mingXiInfo">
+          <el-form label-width="140px" :model="mingXiInfo" :inline="true">
             <el-form-item label="创建时间:">
               <span>{{mingXiInfo.createTime}}</span>
             </el-form-item>
@@ -133,10 +143,42 @@
               <span>{{mingXiInfo.isPrint}}</span>
             </el-form-item>
             <el-form-item label="出库状态:">
-              <span>{{mingXiInfo.isPrint}}</span>
+              <span v-if="mingXiInfo.status === 0">未出库</span>
+              <span v-else-if="mingXiInfo.status === 1">已出库</span>
+              <span v-else>出库中</span>
             </el-form-item>
             <el-form-item label="备注:">
               <span>{{mingXiInfo.note}}</span>
+            </el-form-item>
+          </el-form>
+        </div>
+      </el-drawer>
+    </div>
+    <!-- 出库抽屉 -->
+    <div class="chukuSite">
+      <el-drawer  :title="'订单号:'+chukuInfo.orderNo" :visible.sync="chukuVisible" :before-close="closeChukuDrawer" size="50%">
+        <div class="chukuContent">
+          <el-table :data="chukuInfoTable" border stripe @selection-change="chukuSelectionChange" max-height="550">
+            <el-table-column type="selection" width="55" align="center" :selectable='checkboxT'></el-table-column>
+            <!-- <el-table-column type="index" label="匹号" width="roll"></el-table-column> -->
+            <el-table-column  align="center" prop="roll" label="匹号"></el-table-column>
+            <el-table-column  align="center" prop="num" label="合格米数"></el-table-column>
+            <el-table-column  align="center" label="状态">
+              <template slot-scope="scope">
+                <span v-if="scope.row.status===0">未出库</span>
+                <span v-else>已出库</span>
+              </template>
+            </el-table-column>
+            <!-- <el-table-column align="center" prop="type" label="系统业务编号" width="160"></el-table-column> -->
+            <!-- <el-table-column align="center" prop="type" label="业务系统科目名称" width="160"></el-table-column> -->
+          </el-table>
+          <el-form>
+            <el-form-item label="已选择匹号：">
+              <span>{{xuanzhePipao}}</span>
+              <!-- <el-input v-model="formInline.user" placeholder="审批人"></el-input> -->
+            </el-form-item>
+            <el-form-item>
+              <el-button type="primary" size="mini" @click="chukuBtn">出库并打印</el-button>
             </el-form-item>
           </el-form>
         </div>
@@ -269,11 +311,11 @@
                       </div>
                     </div>
                     <div class="n4 flexCenter borderTR">{{item.origin}}</div>
-                    <div v-if="item.finishRollNum ===null" class="n5">{{item.rollNum}}</div>
+                    <div v-if="item.finishRollNum ===null" class="n5 flexCenter borderTR">{{item.rollNum}}</div>
                     <div v-else class="n5 flexCenter borderTR">{{item.rollNum-item.finishRollNum}}</div>
                     <div class="dayinChildren">
-                      <div v-for="(item2,index2) in item.nums" :key="index2" class="n9 flexCenter borderTR">
-                        <div :class="item2.status===1?'hui':''">{{item2.num}}</div>
+                      <div v-for="(item2,index2) in item.nums" :key="index2" :class="item2.status===1?'hui n9 flexCenter borderTR':'n9 flexCenter borderTR'">
+                        <div>{{item2.num}}</div>
                       </div>
                     </div>
                     <div class="n7 flexCenter borderTR">{{item.totalNum}}</div>
@@ -306,6 +348,7 @@
 
 <script>
 import StoreManageSearch from '../common/StoreManageSearch'
+import axios from 'axios'
 import format from '../../../utils/js/format'
 import messageUtil from '../../../utils/js/MessageUtil'
 export default {
@@ -330,6 +373,16 @@ export default {
       // 明细抽屉
       mingXiVisible:false,
       mingXiInfo:{},
+      // orderId:'',
+      // 出库
+      chukuVisible: false,
+      chukuInfo:{},
+      chukuInfoTable: [],
+      xuanzhePipao:'',
+      chukuArr:[],
+      fkOrderId:'',
+      createTime:'',
+      note:'',
       // 出库单打印
       chukKuDialogVisible:false,
       // 打印时间
@@ -380,41 +433,139 @@ export default {
     mingXi(value) {
       // console.log(value)
       this.mingXiInfo = value
+      // this.orderId = value.fkOrderId
       const params = {
-          id:value.id
-        }
+        id:value.id
+      }
       this.$get('/inventory/out/detail/list',{
-          ...params
-        }).then(res => {
-          console.log(res.data)
-          this.mingxiTable = res.data
-          // a.nums = res.data
-          // let totalNum = 0
-          // for (let objs of a.nums) {
-          //   totalNum+=objs.num
-          // }
-          // a.totalNum = totalNum
-          // const numsLength = 9 - a.nums.length % 9
-          // // console.log(numsLength)
-          // for (let ab = 0;ab<numsLength;ab++){
-          //   a.nums.push({num:''})
-          // }
-          // console.log(a)
-          // this.tableDayin.push(a)
-          // this.chukKuDialogVisible = true
+        ...params
+      }).then(res => {
+        // console.log(res.data)
+        this.mingxiTable = res.data
+        const id = {
+          id:value.fkOrderId
+        }
+        this.$get('/flaw/xcx/'+value.fkOrderId).then(res=>{
+          // console.log(this.mingxiTable)
+          // console.log(res.data)
+          for(let a=0;a<this.mingxiTable.length;a++){
+            // console.log(1)
+            this.mingxiTable[a]['xiaci'] = ''
+          }
+          // console.log(this.mingxiTable)
+          for (let arr of res.data) {
+            // console.log(arr)
+            this.mingxiTable.map(i=>{
+              if (i.roll ===arr.roll){
+                // console.log(i.roll)
+                i.xiaci = i.xiaci + arr.flawName + '(' + arr.num + ');'
+                // arr.xiaci = i.roll
+              } 
+            })
+          }
+          // console.log(this.mingxiTable)
           this.mingXiVisible = true
         })
-      // const mingxiParams = {
-      //   id:value.id
-      // }
-      // this.$get('/inventory/out/detail/list',{
-      //     ...mingxiParams
-      //   }).then(res => {
-      //     console.log(res)
-      //   })
-      // this.customerName = value.customerName
-
-      // this.mingXiVisible = true
+      })
+    },
+    // 打开出库抽屉按钮
+    chuku(a) {
+      this.fkOrderId = a.fkOrderId
+      this.kehuName = a.customerName
+      this.note = a.note
+      this.createTime = a.createTime
+      console.log(a)
+      this.chukuInfo = a
+      const params = {
+        id:a.id
+      }
+      this.$get('/inventory/out/detail/list',{
+        ...params
+      }).then(res => {
+        // console.log(res.data)
+        this.chukuInfoTable = res.data
+        // console.log(this.chukuInfoTable)
+        this.chukuVisible = true
+      })
+    },
+    // 出库选项改变
+    chukuSelectionChange (a) {
+      console.log(a)
+      this.chukuArr = a
+      let xuanzhePipao = a.map(i => {
+        return i.roll
+      })
+      // console.log(xuanzhePipao)
+      this.xuanzhePipao = xuanzhePipao.join(',')
+    },
+    // 出库选项禁用
+    checkboxT (row, index) {
+      if(row.status === 1) {
+        return false
+      } else {
+        return true
+      }
+    },
+    // 关闭出库抽屉
+    closeChukuDrawer () {
+      this.chukuInfo = {}
+      this.chukuInfoTable = []
+      this.xuanzhePipao = ''
+      this.chukuArr = []
+      this.chukuVisible =false
+    },
+    // 出库并打印确定按钮
+    async chukuBtn () {
+      // console.log(this.chukuArr)
+      if (this.chukuArr.length===0) return messageUtil.message.error('请选择出库匹号')
+      const arr = this.chukuArr.map( i=> {
+        return i.id
+      })
+      const id = this.chukuArr[0].fkInventoryOutId
+      const chukuParams = [{
+        inventoryOutId: id,
+        detailIds:arr
+      }]
+      const res = await axios.put('/inventory/out',chukuParams)
+      messageUtil.message.success(res.data.message)
+      const a={}
+      this.tableDayin = []
+      this.timeData = format(new Date(), 'YYYY-MM-DD HH:mm:ss')
+      a.orderNo = this.fkOrderId
+      a.fabricName = this.kehuName
+      // fkOrderId
+      const orderParams = {
+       id:this.fkOrderId
+      }
+      this.$get('/order/print/'+this.fkOrderId,{
+        ...orderParams
+      }).then(res=>{
+        console.log(res.data)
+        a.flowerNum = res.data.flowerNums
+        a.origin = res.data.origin
+        a.nums = this.chukuArr
+        a.rollNum = this.chukuArr.length
+        a.finishRollNum = null
+        a.note = this.note
+        a.createTime = this.createTime
+        let totalNum = 0
+        for (let objs of a.nums) {
+          // console.log(objs)
+          totalNum+=objs.num
+        }
+        a.totalNum = totalNum
+        const numsLength = 9 - a.nums.length % 9
+        // console.log(numsLength)
+        for (let ab = 0;ab<numsLength;ab++){
+          a.nums.push({num:''})
+        }
+        console.log(a)
+        this.tableDayin.push(a)
+        this.chukuVisible = false
+        this.chukKuDialogVisible = true
+      })
+      // this.closeChukuDrawer()
+      // this.getChukuList()
     },
     // 打印按钮
     daYin(a) {
@@ -436,7 +587,7 @@ export default {
         this.$get('/inventory/out/detail/list',{
           ...params
         }).then(res => {
-          // console.log(res.data)
+          console.log(res.data)
           a.nums = res.data
           let totalNum = 0
           for (let objs of a.nums) {
@@ -449,26 +600,18 @@ export default {
           for (let ab = 0;ab<numsLength;ab++){
             a.nums.push({num:''})
           }
-          // console.log(a)
+          console.log(a)
           this.tableDayin.push(a)
           this.chukKuDialogVisible = true
         })
       })
     },
-    // 隐藏打印第6列表头
-    // hideSixTh({row, rowIndex}) {
-    //   if (rowIndex === 5) {
-    //       return {background: '#edf6fb'}
-    //   }
-    //   return
-    // },
     // 关闭明细抽屉
     closeMingXiDrawer () {
       this.mingXiInfo = {}
-      
       this.mingXiVisible = false
     },
-    // 表格前选中
+    //合并打印表格前选中
     handleSelectionChange(rows){
       // console.log(rows)
       const length = rows.length
@@ -630,9 +773,9 @@ export default {
   width: 10%;
 }
 .hui{
-  background-color: #ccc;
+  background-color: #EEEEEE;
 }
-.outboundList .el-table__header-wrapper th:first-child .cell .el-checkbox{
+.contentTable .el-table__header-wrapper th:first-child .cell .el-checkbox{
   display: none;
 }
 .botH4First{
@@ -661,5 +804,13 @@ export default {
 }
 .outboundList .tagSearchHebing{
   display: flex;
+}
+.mingXiInfo{
+  padding-left:20px;
+  padding-right:20px;
+}
+.chukuContent{
+  padding-left: 20px;
+  padding-right: 20px;
 }
 </style>
