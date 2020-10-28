@@ -435,7 +435,7 @@
       //重置密码
       HandlerResetPwd(userInfo){
         messageUtil.confirm('确认要将该员工密码重置吗？',()=>{
-          console.log('000')
+          // console.log('000')
           this.$put('/user/password/'+userInfo.id,{'id':userInfo.id}).then((data)=>{
             messageUtil.message.success(data.message)
             this.getData();

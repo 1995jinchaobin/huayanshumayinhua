@@ -1,6 +1,6 @@
 <template>
   <div class="inboundList">
-    <storeManageSearch @searchList="searchList"></storeManageSearch>
+    <storeManageSearch @searchList="searchList" @daochu="daochu"></storeManageSearch>
     <el-table
       :data="rukuList"
       style="width: 100%"
@@ -320,6 +320,49 @@ export default {
     // 关闭入库抽屉
     closeRukuDrawer () {
       this.rukuDrawer = false
+    },
+    // 导出按钮
+    daochu(a){
+      delete a.page
+      delete a.rows
+      for (let para in a){
+        if (a[para].trim()===''){
+          delete a[para]
+        }
+      }
+      let urlAdd = ''
+      if(a.customerName){
+        urlAdd+='customerName='+ a.customerName
+        if(a.name){
+          urlAdd+='&name='+ a.name
+        }
+        if(a.startTime){
+          urlAdd+='&startTime='+ a.startTime
+          urlAdd+='&endTime='+ a.endTime
+        }
+      }else{
+        urlAdd = ''
+        if(a.name){
+          urlAdd+='name='+ a.name
+          if(a.startTime){
+            urlAdd+='&startTime='+ a.startTime
+            urlAdd+='&endTime='+ a.endTime
+          }
+        }else{
+          urlAdd = ''
+          if(a.startTime){
+            urlAdd+='startTime='+ a.startTime
+            urlAdd+='&endTime='+ a.endTime
+          }
+        }
+      }
+      let url = ''
+      if(urlAdd===''){
+        url = this.$baseUrl + '/inventory/in/order/export'
+      } else{
+        url = this.$baseUrl + '/inventory/in/order/export?' + urlAdd
+      }
+      window.open(url)
     }
   },
   created () {

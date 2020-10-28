@@ -1,4 +1,4 @@
-<template>
+<!--<template>
   <div>
     <el-form>
                 <el-form-item>
@@ -17,7 +17,7 @@
                         accept="image/png,image/gif,image/jpg,image/jpeg"
                         :limit="200">
                         <el-button slot="trigger" size="mini" type="primary">选择图片</el-button>
-                        <!-- <el-button style="margin-left: 10px;" size="mini" type="success" @click="submitUpload">上传图片</el-button> -->
+                         <el-button style="margin-left: 10px;" size="mini" type="success" @click="submitUpload">上传图片</el-button> 
                     </el-upload>
                 </el-form-item>
             </el-form>
@@ -86,4 +86,4 @@ handleChange(file, fileList) {//上传文件变化时
 
 <style>
 
-</style>
+</style>-->

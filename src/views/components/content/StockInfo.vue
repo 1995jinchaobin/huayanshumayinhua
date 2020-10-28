@@ -478,10 +478,10 @@ export default {
         // console.log(res)
         // messageUtil.message.success(res.data.message)
         if (res.data.code ===0){
-          console.log(this.drawer)
-          console.log(this.addStockParams)
+          // console.log(this.drawer)
+          // console.log(this.addStockParams)
           this.addStockParams.url = res.data.data
-          console.log(this.addStockParams)
+          // console.log(this.addStockParams)
         }
       })
     },
@@ -564,46 +564,14 @@ export default {
     },
     // 导出库存信息
     daochu(a){
-      // console.log(a)
       delete a.page
       delete a.rows
       for (let para in a){
-        // console.log(para)
-        // console.log(a[para])
         if (a[para].trim()===''){
           delete a[para]
-          // console.log(1)
         }
       }
-      // console.log(a)
       let urlAdd = ''
-      // for (let aa of a){
-      //   console.log(aa)
-      // }
-      // if (a.customerName&&urlAdd!==''){
-      //   urlAdd+='&customerName='+ a.customerName
-      // }
-      // if(a.endTime&&urlAdd!==''){
-      //   urlAdd+='&endTime='+ a.endTime
-      // }
-      // if(a.name&&urlAdd!==''){
-      //   urlAdd+='&name='+ a.name
-      // }
-      // if(a.startTime&&urlAdd!==''){
-      //   urlAdd+='&startTime='+ a.startTime
-      // }
-      // if (a.customerName&&urlAdd===''){
-      //   urlAdd+='customerName='+ a.customerName
-      // }
-      // if(a.endTime&&urlAdd===''){
-      //   urlAdd+='endTime='+ a.endTime
-      // }
-      // if(a.name&&urlAdd===''){
-      //   urlAdd+='name='+ a.name
-      // }
-      // if(a.startTime&&urlAdd===''){
-      //   urlAdd+='startTime='+ a.startTime
-      // }
       if(a.customerName){
         urlAdd+='customerName='+ a.customerName
         if(a.name){
@@ -629,22 +597,13 @@ export default {
           }
         }
       }
-      // console.log(urlAdd)
-      // console.log(this.$baseUrl)
       let url = ''
       if(urlAdd===''){
         url = this.$baseUrl + '/inventory/order/export'
       } else{
         url = this.$baseUrl + '/inventory/order/export?' + urlAdd
       }
-      // console.log(url)
       window.open(url)
-      // let baseUrl = 'http://192.168.1.115:9999'
-      // this.$get('/inventory/order/export',{
-      //   ...a
-      // }).then((data)=>{
-      //   console.log(data)
-      // })
     }
   },
   created(){

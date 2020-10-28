@@ -280,7 +280,7 @@
         this.$get('/machine',{
           ...this.searchParams,...this.page
         }).then((data)=>{
-          console.log(data);
+          // console.log(data);
           this.tableData=data.data.list;
           this.page.total = data.data.total;
         })

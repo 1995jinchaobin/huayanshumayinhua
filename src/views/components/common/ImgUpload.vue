@@ -1,6 +1,6 @@
-<template>
+<!--<template>
   <div class="imgupload">
-    <!-- action 图片上传的数据库地址 on-remove 图片移除  list-type 图片显示效果  headers 设置上传的请求头部   on-success 文件上传成功的钩子函数-->
+    action 图片上传的数据库地址 on-remove 图片移除  list-type 图片显示效果  headers 设置上传的请求头部   on-success 文件上传成功的钩子函数
     <el-upload
       :limit="1"
       :selectCount=1
@@ -15,7 +15,7 @@
       :show-file-list="showList">
       <el-button size="small" type="primary">点击上传</el-button>
     </el-upload>
-    <!-- <el-upload
+    <el-upload
       :limit="1"
       :selectCount=1
       action="#"
@@ -30,7 +30,7 @@
       :on-change="handleChange"
       :data="getUploadList">
       <el-button size="small" type="primary">点击上传</el-button>
-    </el-upload> -->
+    </el-upload>
   </div>
 </template>
 
@@ -82,4 +82,4 @@ export default {
 </script>
 
 <style>
-</style>
+</style>-->

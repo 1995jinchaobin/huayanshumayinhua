@@ -75,7 +75,7 @@
               if (gaoliang) {
                 _this.$router.push({path: gaoliang})
               } else{
-                _this.$router.push({path: '/home'})
+                _this.$router.push({path: '/orderManage'})
                 window.sessionStorage.setItem("defaultActive",'/orderManage')
               }
             }else{

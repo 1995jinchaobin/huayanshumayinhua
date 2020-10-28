@@ -32,7 +32,7 @@
             </el-submenu>
             <div class="warnMessage" @click="toWarnMessage" :style="defaultActive==='/warnMessage'?styleObject:''">
               <span>警告</span>
-              <el-badge :value="warnMessageValue" :max="99">
+              <el-badge :value="warnMessageValue" :max="99" :hidden="warnMessageValue===0?true:false">
                 <!-- <span>警戒管理</span> -->
               </el-badge>
             </div>
@@ -95,9 +95,12 @@ export default {
     };
   },
   created() {
-    // this.warnMessage()
+    this.warnMessage()
     this.timer = setInterval(this.warnMessage,10000)
-    this.defaultActive = window.sessionStorage.getItem('defaultActive')
+    // this.defaultActive = window.sessionStorage.getItem('defaultActive')
+    if(window.sessionStorage.getItem('defaultActive')){
+      this.defaultActive = window.sessionStorage.getItem('defaultActive')
+    }
   },
   methods: {
     ...mapMutations(["saveLoginInfo"]),
@@ -170,12 +173,11 @@ export default {
         ...this.getWarnMessageParams
       }).then((data)=>{
         // console.log(data.data.list)
-        // console.log(data)
         this.warnMessageValue = data.data.total
         // this.rukuList = data.data.list
         // this.warnMessageList = data.data.list
         // this.total = data.data.total
-        // console.log(this.total)
+        // console.log(this.warnMessageValue)
       })
     }
   },
@@ -183,6 +185,13 @@ export default {
     this.setPath();
   },
   updated() {
+    // console.log(this.$route.path)
+    const url = this.$route.path
+    const urlS = window.sessionStorage.getItem('defaultActive')
+    // console.log()
+    if (url !== urlS) {
+      window.sessionStorage.setItem('defaultActive',url)
+    }
     this.defaultActive = window.sessionStorage.getItem('defaultActive')
   },
   computed: {

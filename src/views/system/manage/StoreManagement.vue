@@ -66,8 +66,8 @@ export default {
   },
   methods: {
     handleClick(tab, event, name) {
-      console.log(tab, event);
-      console.log(name)
+      // console.log(tab, event);
+      // console.log(name)
     }
     // // 打开新增入库
     // openUpdateDrawer() {
