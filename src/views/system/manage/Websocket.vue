@@ -1,9 +1,5 @@
 <template>
-    <!-- <div id="warning">
-      
-    </div> -->
     <div>
-
     </div>
 </template>
 
@@ -16,11 +12,6 @@ export default {
 
    },
    created(){
-    
-   //   this.$get('/machine').then((data)=>{
-         //  console.log(data);
-         
-      //   })
    }
 }
 </script>
@@ -34,7 +25,6 @@ export default {
    height: 50px;
    border-radius: 50%;
    background:red;
-   text-align: center;
-   
+   text-align: center; 
 }
 </style>

@@ -219,75 +219,83 @@
         title=""
         :visible.sync="chukKuDialogVisible"
         fullscreen>
-        <el-row>
-          <el-col :span="22" :offset="1">
-            <div id="printChuKuArea">
-              <div style="font-size: 22px;text-align: center;letter-spacing: 10px;line-height: 160%;">绍兴华燕数码印花有限公司</div>
-              <div style="font-size: 28px;text-align: center;letter-spacing: 10px;line-height: 160%;">出库单</div>
-              <div class="kehuNameOut">
-                <div class="kuhuNameOut">客户名称: {{kehuName}}</div>
-                <div class="kuhuNameOut">日期: {{timeData}}</div>
-              </div>
-              <div class="tbodyDayin">
-                <div class="titleThDayin">
-                  <div class="n1 flexCenter borderR">订单号</div>
-                  <div class="n2 flexCenter borderR">面料规格</div>
-                  <div class="n3 flexCenter borderR">花号</div>
-                  <div class="n4 flexCenter borderR">加工/经销</div>
-                  <div class="n5 flexCenter borderR">匹数</div>
-                  <div class="n6 flexCenter borderR">1</div>
-                  <div class="n6 flexCenter borderR">2</div>
-                  <div class="n6 flexCenter borderR">3</div>
-                  <div class="n6 flexCenter borderR">4</div>
-                  <div class="n6 flexCenter borderR">5</div>
-                  <div class="n6 flexCenter borderR">6</div>
-                  <div class="n6 flexCenter borderR">7</div>
-                  <div class="n6 flexCenter borderR">8</div>
-                  <div class="n6 flexCenter borderR">9</div>
-                  <div class="n7 flexCenter borderR">米数</div>
-                  <div class="n10 flexCenter borderR">下单日期</div>
-                  <div class="n8 flexCenter">备注</div>
-                </div>
-                <div>
-                  <div v-for="(item,index) in tableDayin" :key="index" class="dayin">
-                    <div class="n1 flexCenter borderTR">{{item.orderNo}}</div>
-                    <div class="n2 flexCenter borderTR">{{item.fabricName}}</div>
-                    <div class="n3 flexCenter borderTR">
-                      <div v-for="(item3,index3) in item.flowerNum" :key="index3">
-                        {{item3+';'}}
+        <!-- <el-row>
+          <el-col :span="22" :offset="1"> -->
+            <div class="dayinBuju">
+              <div class="dayinBuju1">
+                <div id="printChuKuArea">
+                  <div style="font-size: 22px;text-align: center;letter-spacing: 10px;line-height: 160%;">绍兴华燕数码印花有限公司</div>
+                  <div style="font-size: 28px;text-align: center;letter-spacing: 10px;line-height: 160%;">出库单</div>
+                  <div class="kehuNameOut">
+                    <div class="kuhuNameOut">客户名称: {{kehuName}}</div>
+                    <div class="kuhuNameOut">日期: {{timeData}}</div>
+                  </div>
+                  <div class="tbodyDayin">
+                    <div class="titleThDayin">
+                      <div class="n1 flexCenter borderR">订单号</div>
+                      <div class="n2 flexCenter borderR">面料规格</div>
+                      <div class="n3 flexCenter borderR">花号</div>
+                      <div class="n4 flexCenter borderR">加工/经销</div>
+                      <div class="n5 flexCenter borderR">匹数</div>
+                      <div class="n6 flexCenter borderR">1</div>
+                      <div class="n6 flexCenter borderR">2</div>
+                      <div class="n6 flexCenter borderR">3</div>
+                      <div class="n6 flexCenter borderR">4</div>
+                      <div class="n6 flexCenter borderR">5</div>
+                      <div class="n6 flexCenter borderR">6</div>
+                      <!-- <div class="n6 flexCenter borderR">7</div>
+                      <div class="n6 flexCenter borderR">8</div>
+                      <div class="n6 flexCenter borderR">9</div> -->
+                      <div class="n7 flexCenter borderR">米数</div>
+                      <div class="n10 flexCenter borderR">下单日期</div>
+                      <div class="n8 flexCenter">备注</div>
+                    </div>
+                    <div>
+                      <div v-for="(item,index) in tableDayin" :key="index" class="dayin">
+                        <div class="n1 flexCenter borderTR">{{item.orderNo}}</div>
+                        <div class="n2 flexCenter borderTR">{{item.fabricName}}</div>
+                        <div class="n3 flexCenter borderTR">
+                          <div v-for="(item3,index3) in item.flowerNum" :key="index3">
+                            {{item3+';'}}
+                          </div>
+                        </div>
+                        <div class="n4 flexCenter borderTR">{{item.origin}}</div>
+                        <div class="n5 flexCenter borderTR">{{item.rollNum}}</div>
+                        <!-- <div v-else class="n5 flexCenter borderTR">{{item.rollNum-item.finishRollNum}}</div> -->
+                        <div class="dayinChildren">
+                          <div v-for="(item2,index2) in item.nums" :key="index2" :class="item2.status===1?'hui n9 flexCenter borderTR':'n9 flexCenter borderTR'">
+                            <div>{{item2.num}}</div>
+                          </div>
+                        </div>
+                        <div class="n7 flexCenter borderTR">{{item.totalNum}}</div>
+                        <div class="n10 flexCenter borderTR">{{item.createTime}}</div>
+                        <div class="n8 flexCenter borderT">{{item.note}}</div>
                       </div>
                     </div>
-                    <div class="n4 flexCenter borderTR">{{item.origin}}</div>
-                    <div class="n5 flexCenter borderTR">{{item.rollNum}}</div>
-                    <!-- <div v-else class="n5 flexCenter borderTR">{{item.rollNum-item.finishRollNum}}</div> -->
-                    <div class="dayinChildren">
-                      <div v-for="(item2,index2) in item.nums" :key="index2" :class="item2.status===1?'hui n9 flexCenter borderTR':'n9 flexCenter borderTR'">
-                        <div>{{item2.num}}</div>
-                      </div>
+                  </div>
+                  <div class="footDatin">
+                    <div class="botH4First">
+                      <h4>注：如有质量问题7天内调换，一经开剪，我公司概不负责。谢谢合作！</h4>
                     </div>
-                    <div class="n7 flexCenter borderTR">{{item.totalNum}}</div>
-                    <div class="n10 flexCenter borderTR">{{item.createTime}}</div>
-                    <div class="n8 flexCenter borderT">{{item.note}}</div>
+                    <div class="botH4two">
+                      <h4 class="h4width">制单：</h4>
+                      <h4 class="h4width">日期：</h4>
+                      <h4 class="h4width">业务员：</h4>
+                    </div>
                   </div>
                 </div>
               </div>
-              <div class="botH4First">
-                <h4>注：如有质量问题7天内调换，一经开剪，我公司概不负责。谢谢合作！</h4>
-              </div>
-              <div class="botH4two">
-                <h4 class="h4width">制单：</h4>
-                <h4 class="h4width">日期：</h4>
-                <h4 class="h4width">业务员：</h4>
-              </div>
+              
             </div>
+            
             <div class="bottomDayin">
               <div class="wenzi">
                 <!-- <span>打印机为针式打印机特点规格，高总提供</span> -->
                 <el-button v-print="'#printChuKuArea'" plain>打印</el-button>
               </div>
             </div>
-          </el-col>
-        </el-row>
+          <!-- </el-col>
+        </el-row> -->
       </el-dialog>
     </div>
   </div>
@@ -349,12 +357,8 @@ export default {
       this.$get('/inventory/out/list',{
         ...this.chukuParams
       }).then((data)=>{
-        // console.log(data.data.list)
-        // console.log(data)
         this.chukuList = data.data.list
-        // this.tableData = data.data.list
         this.total = data.data.total
-        // console.log(this.total)
       })
     },
     headFirst({row, colunm, rowIndex, columnIndex}) {
@@ -374,58 +378,44 @@ export default {
     },
     // 触发搜索
     searchList(value){
-      // console.log(value)
       this.chukuParams = value
       this.getChukuList()
     },
     // 明细按钮
     mingXi(value) {
-      // console.log(value)
       this.mingXiInfo = value
-      // this.orderId = value.fkOrderId
       const params = {
         id:value.id
       }
       this.$get('/inventory/out/detail/list',{
         ...params
       }).then(res => {
-        // console.log(res.data)
         this.mingxiTable = res.data
         const id = {
           id:value.fkOrderId
         }
         this.$get('/flaw/xcx/'+value.fkOrderId).then(res=>{
-          // console.log(this.mingxiTable)
-          // console.log(res.data)
           for(let a=0;a<this.mingxiTable.length;a++){
-            // console.log(1)
             this.mingxiTable[a]['xiaci'] = ''
           }
-          // console.log(this.mingxiTable)
           for (let arr of res.data) {
-            // console.log(arr)
             this.mingxiTable.map(i=>{
               if (i.roll ===arr.roll){
-                // console.log(i.roll)
                 i.xiaci = i.xiaci + arr.flawName + '(' + arr.num + ');'
-                // arr.xiaci = i.roll
               } 
             })
           }
-          // console.log(this.mingxiTable)
           this.mingXiVisible = true
         })
       })
     },
     // 打开出库抽屉按钮
     chuku(a) {
-      // console.log(this.chukuSelect)
       this.fkOrderId = a.fkOrderId
       this.orderNo = a.orderNo
       this.kehuName = a.customerName
       this.note = a.note
       this.createTime = a.createTime
-      // console.log(a)
       this.chukuInfo = a
       const params = {
         id:a.id
@@ -433,20 +423,16 @@ export default {
       this.$get('/inventory/out/detail/list',{
         ...params
       }).then(res => {
-        // console.log(res.data)
         this.chukuInfoTable = res.data
-        // console.log(this.chukuInfoTable)
         this.chukuVisible = true
       })
     },
     // 出库选项改变
     chukuSelectionChange (a) {
-      // console.log(a)
       this.chukuArr = a
       let xuanzhePipao = a.map(i => {
         return i.roll
       })
-      // console.log(xuanzhePipao)
       this.xuanzhePipao = xuanzhePipao.join(',')
     },
     // 出库选项禁用
@@ -467,7 +453,6 @@ export default {
     },
     // 出库并打印确定按钮
     async chukuBtn () {
-      // console.log(this.chukuArr)
       if (this.chukuArr.length===0) return messageUtil.message.error('请选择出库匹号')
       const arr = this.chukuArr.map( i=> {
         return i.id
@@ -491,7 +476,6 @@ export default {
       this.$get('/order/print/'+this.fkOrderId,{
         ...orderParams
       }).then(res=>{
-        // console.log(res.data)
         a.flowerNum = res.data.flowerNums
         a.origin = res.data.origin
         a.nums = this.chukuArr
@@ -501,16 +485,13 @@ export default {
         a.createTime = this.createTime
         let totalNum = 0
         for (let objs of a.nums) {
-          // console.log(objs)
           totalNum+=objs.num
         }
         a.totalNum = totalNum
-        const numsLength = 9 - a.nums.length % 9
-        // console.log(numsLength)
+        const numsLength = 6 - a.nums.length % 6
         for (let ab = 0;ab<numsLength;ab++){
           a.nums.push({num:''})
         }
-        // console.log(a)
         this.tableDayin.push(a)
         this.chukuVisible = false
         this.getChukuList()
@@ -519,13 +500,11 @@ export default {
     },
     // 打印选择框打开
     daYinSelect(a){
-      // console.log(a)
       this.fkOrderId = a.fkOrderId
       this.orderNo = a.orderNo
       this.kehuName = a.customerName
       this.note = a.note
       this.createTime = a.createTime
-      // console.log(a)
       this.chukuInfo = a
       const params = {
         id:a.id
@@ -533,7 +512,6 @@ export default {
       this.$get('/inventory/out/detail/list',{
         ...params
       }).then(res => {
-        // console.log(res.data)
         this.chukuInfoTable = res.data
         this.chukuSelectVisible = true
       })
@@ -571,7 +549,6 @@ export default {
       this.$get('/order/print/'+this.fkOrderId,{
         ...orderParams
       }).then(res=>{
-        // console.log(res.data)
         a.flowerNum = res.data.flowerNums
         a.origin = res.data.origin
         a.nums = this.chukuArr
@@ -581,58 +558,19 @@ export default {
         a.createTime = this.createTime
         let totalNum = 0
         for (let objs of a.nums) {
-          // console.log(objs)
           totalNum+=objs.num
         }
         a.totalNum = totalNum
-        const numsLength = 9 - a.nums.length % 9
-        // console.log(numsLength)
-        if(numsLength < 9) {
+        const numsLength = 6 - a.nums.length % 6
+        if(numsLength < 6) {
           for (let ab = 0;ab<numsLength;ab++){
             a.nums.push({num:''})
           }
         }
-        // console.log(a)
         this.tableDayin.push(a)
         this.chukuSelectVisible = false
         this.chukKuDialogVisible = true
       })
-      // console.log(a)
-      // this.timeData = format(new Date(), 'YYYY-MM-DD HH:mm:ss')
-      // this.kehuName = a.customerName
-      // this.tableDayin = []
-      // const orderParams = {
-      //  id:a.fkOrderId
-      // }
-      // this.$get('/order/print/'+a.fkOrderId,{
-      //   ...orderParams
-      // }).then(data=>{
-      //   a.flowerNum = data.data.flowerNums,
-      //   a.origin = data.data.origin
-      //   const params = {
-      //     id:a.id
-      //   }
-      //   this.$get('/inventory/out/detail/list',{
-      //     ...params
-      //   }).then(res => {
-      //     console.log(res.data)
-      //     a.nums = res.data
-      //     let totalNum = 0
-      //     for (let objs of a.nums) {
-      //       // console.log(objs)
-      //       totalNum+=objs.num
-      //     }
-      //     a.totalNum = totalNum
-      //     const numsLength = 9 - a.nums.length % 9
-      //     // console.log(numsLength)
-      //     for (let ab = 0;ab<numsLength;ab++){
-      //       a.nums.push({num:''})
-      //     }
-      //     console.log(a)
-      //     this.tableDayin.push(a)
-      //     this.chukKuDialogVisible = true
-      //   })
-      // })
     },
     // 关闭明细抽屉
     closeMingXiDrawer () {
@@ -641,15 +579,12 @@ export default {
     },
     //合并打印表格前选中
     handleSelectionChange(rows){
-      // console.log(rows)
       const length = rows.length
       if (length>1) {
-        // console.log(rows[length-1].customerName)
         if(rows[length-1].customerName!==rows[length-2].customerName){
           this.$refs.multipleTable.toggleRowSelection(rows[length-1])
           rows.pop()
           this.tableDayin = rows
-          // console.log(this.tableDayin)
           return messageUtil.message.error('请选择同一个客户')
         } else {
           this.tableDayin = rows
@@ -663,7 +598,6 @@ export default {
     // 合并打印
     hebingDayin(){
       this.addnum = 0
-      // console.log(this.tableDayin)
       const hebingLength = this.tableDayin.length
       if(hebingLength>0){
         this.timeData = format(new Date(), 'YYYY-MM-DD HH:mm:ss')
@@ -683,21 +617,17 @@ export default {
             this.$get('/inventory/out/detail/list',{
               ...params
             }).then(res=>{
-              // console.log(res)
               this.tableDayin[timeS].nums = res.data
               let totalNum = 0
               for (let obj of this.tableDayin[timeS].nums) {
-                // console.log(obj)
                 totalNum+=obj.num
               }
               this.tableDayin[timeS].totalNum = totalNum
-              const numsLength = 9 - this.tableDayin[timeS].nums.length % 9
+              const numsLength = 6 - this.tableDayin[timeS].nums.length % 6
               for (let abc = 0;abc<numsLength;abc++){
                 this.tableDayin[timeS].nums.push({num:''})
               }
               this.addnum+=1
-              // console.log(this.addnum)
-              // console.log(hebingLength)
               if (this.addnum===hebingLength){
                 this.chukKuDialogVisible = true
               }
@@ -783,7 +713,7 @@ export default {
   text-align: center;
 }
 .dayinChildren{
-  width: 36%;
+  width: 30%;
   display: flex;
   flex-wrap: wrap;
 }
@@ -814,9 +744,6 @@ export default {
 }
 .n1{
   width: 10%;
-  /* background-color: red; */
-  /* border-top:none;
-  border-bottom: none; */
 }
 .n2{
   width: 10%;
@@ -828,19 +755,19 @@ export default {
   width: 6%;
 }
 .n5{
-  width: 4%;
+  width: 5%;
 }
 .n6{
-  width: 4%;
+  width: 5%;
 }
 .n7{
   width: 5%;
 }
 .n8{
-  width: 10%;
+  width: 15%;
 }
 .n9{
-  width: 11.111%;
+  width: 16.66667%;
 }
 .n10{
   width: 10%;
@@ -868,9 +795,11 @@ export default {
   background-color: #eee;
   display: flex;
   align-items: center;
+  margin-top: 14cm;
 }
 .bottomDayin .wenzi{
-  margin: auto 300px;
+  margin-left:50%;
+  position: absolute;
 }
 .wenzi .el-button{
   margin-left: 10px;
@@ -885,5 +814,28 @@ export default {
 .chukuContent{
   padding-left: 20px;
   padding-right: 20px;
+}
+#printChuKuArea{
+  width: 20cm;
+  height: 12.5cm;
+  position: absolute;
+  left: 0;
+  top: 0;
+  margin: 0;
+  padding: 0;
+}
+.footDatin{
+  position: absolute;
+  bottom: 0;
+}
+.dayinBuju{
+  width: 100%;
+  /* display: flex;
+  justify-content: center; */
+}
+.dayinBuju1{
+  position: relative;
+  margin-left: 50%;
+  transform: translateX(-50%);
 }
 </style>

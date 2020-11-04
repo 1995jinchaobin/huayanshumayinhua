@@ -8,6 +8,8 @@ import echarts from 'echarts'
 Vue.component('chart', echarts)
 import store from './store/store'
 import Print from 'vue-print-nb'
+// import Blob from './excel/Blob'
+// import Export2Excel from './excel/Export2Excel.js'
 
 // 全局注册网络请求
 import {post,get,deletefn,put} from './utils/js/http';

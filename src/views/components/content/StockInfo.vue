@@ -310,23 +310,15 @@ export default {
   methods:{
     // 获取仓库列表数据
     getData() {
-      // console.log(this.sreachpage)
       this.$get('/inventory/list',{
         ...this.sreachpage
       }).then((data)=>{
-        // console.log(data.data.list)
-        // console.log(data)
         this.tableData = data.data.list
         this.total = data.data.total
-        // console.log(this.total)
-        // this.page.total = data.data.total;
       })
-      // const a = this.axios.get('http://192.168.1.115:9999/inventory/list',{params:this.sreachpage})
-      // console.log(a)
     },
     // 搜索
     searchList(value) {
-      // console.log(value)
       this.sreachpage = value
       this.getData()
     },
@@ -345,20 +337,15 @@ export default {
      // 打开新增入库
     openUpdateDrawer() {
       this.getUserList()
-      // this.getCategory()
       this.drawer = true
     },
     // 跳转到面料管理页面
     toAddMianliao () {
-      // console.log(this.addStockParams.fkCustomerId)
-      // console.log(this.userList)
       if (this.addStockParams.fkCustomerId!==''){
         const index = this.userList.findIndex(item => {
           return item.id === this.addStockParams.fkCustomerId
         })
-        // console.log(index)
         const key = this.userList[index].name
-        // console.log(key)
         this.$router.push({
           path:'/fabricManage',
           name:'FabricManage',
@@ -379,7 +366,6 @@ export default {
     },
     // 关闭新增入库清空数据
     closeAddStockDrawer() {
-      // console.log('关闭')
       this.$refs.addStockParamsRef.resetFields()
       this.$refs.upBiaodan.reset()
       this.file = ''
@@ -393,38 +379,27 @@ export default {
         page:1,
         rows:99999
       }).then((data)=>{
-        // console.log(data)
         this.userList = data.data.list;
       })
     },
     // 选择客户名获取其ID
     getUserId() {
       this.addStockParams.fkFabricId = ''
-      // console.log(this.addStockParams.fkCustomerId)
       this.getCategory()
     },
     // 面料品类
     getCategory() {
-      // console.log(this.addStockParams.fkCustomerId)
       this.$get('/fabric/select',{
         fkCustomerId:this.addStockParams.fkCustomerId
       }).then((data)=>{
-        // console.log(data)
         this.categoryList = data.data;
-        // console.log(this.categoryList)
       })
     },
     // 保存新增入库（无码单）
     saveAddStockNo() {
-      // this.$refs.addStockParamsRef.validate(value => {
-      //   console.log(value)
-      //   if (!value) return
-      // console.log(this.addStockParams)
       this.$post('/inventory/in/add',this.addStockParams).then((data)=>{
-      // console.log(data)
       if (data.code!==0) return messageUtil.message.error(data.message)
       messageUtil.message.success(data.message)
-      // this.closeCheckDrawer();
       this.closeAddStockDrawer()
       this.getData();
       })
@@ -435,60 +410,40 @@ export default {
       this.$refs.addStockParamsRef.validate(value => {
         if (!value) return
         if(this.file!=='') {
-        // console.log('有码单图片')
         this.changChuanImg()
         setTimeout(()=>{
           this.saveAddStockNo()
           },500
         )
-        // this.saveAddStockNo()
-        // console.log('结束')
       } else{
-        // console.log('无码单图片')
         this.saveAddStockNo()
       }
       })
     },
     // 上传图片(缓存)
     changeImg(a) {
-      // console.log('上传图片')
-      // console.log(a.target)
-      // const file1 = a.target.files[0]
       const fr = new FileReader()
       fr.readAsDataURL(a.target.files[0])
       fr.onload = e=> {
-        // console.log(e.target.result)
         this.lookUrl = e.target.result
       }
       // 获取图片
       this.file = document.getElementById("imgFile").files[0]
-      // console.log(this.file)
       this.formData = new FormData()
       // if (file) {
       this.formData.append('file', this.file);　　
       this.formData.append('type', 3)
-        // console.log(formData)
-        // console.log(formData.get('type'))
-        // console.log(formData.get('file'))
-      // }
     },
     // 上传图片
     changChuanImg() {
       axios.post('/file',this.formData).then(res=>{
-        // console.log(res)
-        // messageUtil.message.success(res.data.message)
         if (res.data.code ===0){
-          // console.log(this.drawer)
-          // console.log(this.addStockParams)
           this.addStockParams.url = res.data.data
-          // console.log(this.addStockParams)
         }
       })
     },
     // 上浆调拨
     sizingAllocation(value) {
-      // console.log('上浆调拨')
-      // console.log(value)
       this.addSizingTitle = value.customerName
       this.shangJiangRollNumMax = value.rollNum
       this.shangJiangNumMax = value.num1
@@ -497,19 +452,14 @@ export default {
     },
     // 关闭上浆调拨
     closeCheckShangJiang() {
-      // console.log(this.$refs.addShangJiangParamsRef)
       this.$refs.addShangJiangParamsRef.resetFields()
       this.drawerShangJiang = false
     },
     // 保存上浆调拨
     saveAddShangJiang() {
-      // console.log(this.addShangJiangParams)
       this.$refs.addShangJiangParamsRef.validate(value => {
-        // console.log(value)
         if (!value) return
-        // console.log(this.addShangJiangParams)
         this.$post('/inventory/transfer',this.addShangJiangParams).then((data)=>{
-        // console.log(data)
         messageUtil.message.success(data.message)
         this.closeCheckShangJiang()
         this.getData()
@@ -518,7 +468,6 @@ export default {
     },
     // 编辑入库信息按钮
     checkStock(value) {
-      // console.log(value)
       this.checkInfo = JSON.parse(JSON.stringify(value))
       this.checkVisible = true
     },
@@ -528,19 +477,13 @@ export default {
     },
     // 保存编辑
     checkStockInfo() {
-      // console.log(this.checkInfo)
       const a = {
         id:this.checkInfo.id,
         rollNum:this.checkInfo.rollNum,
         num1:this.checkInfo.num1,
         num2:this.checkInfo.num2,
-        // num3:this.checkInfo.num3,
-        // num4:this.checkInfo.num4,
-        // sizingExpectNum:this.checkInfo.sizingExpectNum
       }
-      // console.log(a)
       this.$put('/inventory/'+this.checkInfo.id,a).then((data)=>{
-        // console.log(data)
         messageUtil.message.success(data.message)
         this.closeCheckDrawer()
         this.getData()
@@ -549,17 +492,9 @@ export default {
     // 根据id查找仓储列表
     getDataOfKey () {
       this.$get('/inventory/'+this.dataKey).then((data)=>{
-        // console.log(data.data.list)
-        // console.log(data.data)
-        // this.rukuList = data.data.list
         const a = new Array()
         a[0] = data.data
-        // console.log(a)
-        // a[0] = data.data
         this.tableData = a
-        // this.total = data.data.total
-        // console.log(this.total)
-        // console.log(this.tableData)
       })
     },
     // 导出库存信息
@@ -607,23 +542,15 @@ export default {
     }
   },
   created(){
-    // console.log(this.$refs)
-    // console.log(this.$refs.storeSearch)
-    // console.log(this.$route)
-    // console.log(this.$route.params)
     if (this.$route.params.key!==undefined){
       this.dataKey = this.$route.params.key
-      // console.log(this.$route.params.key)
       this.getDataOfKey()
     } else {
       this.getData()
     }
   },
   mounted() {
-    // console.log(this.$refs)
-    // console.log(this.$refs.storeSearch)
     this.$refs.storeSearch.getRegionlist()
-    // this.$route.query = {}
   }
 }
 </script>
@@ -632,31 +559,16 @@ export default {
 .stockInfo{
   padding: 10px;
 }
-/* .stockInfo .el-table{
-  width: 1100px;
-} */
 .el-table thead.is-group th{
   background-color: #fff;
 }
 .stockInfo .tagSearch{
   display: flex;
-  /* width: 100%; */
-  /* height: 60px; */
 }
 .stockInfo .addStock{
   margin-right: 10px;
 }
-/* .tagSearch .storeManageSearch{
-  flex: 10;
-}
-.tagSearch div{
-  flex: 1;
-} */
-/* .storeManageSearch{
-  width: 800px;
-} */
 .stockInfo .pagination{
-  /* background-color: aqua; */
   display: flex;
   justify-content: flex-end;
   margin-top: 10px;
@@ -676,7 +588,6 @@ export default {
   height: 140px;
   top: 0;
   left: 0;
-  /* background-color: #409EFF; */
   text-align: center;
   color: #fff;
   border-radius: 5%;
@@ -691,18 +602,18 @@ export default {
     width: 100%;
     position: absolute;
   }
-  .toAddMianliao{
+  .stockInfo .toAddMianliao{
     padding: 10px;
     cursor: pointer;
   }
-  .storeManageCheckStockBtn, .shangjiangTiaoboBtn{
+  .stockInfo .storeManageCheckStockBtn, .shangjiangTiaoboBtn{
     display: flex;
     justify-content: center;
   }
-  .storeManageCheckStockBtn .el-button, .shangjiangTiaoboBtn .el-button{
+  .stockInfo .storeManageCheckStockBtn .el-button, .shangjiangTiaoboBtn .el-button{
     margin: auto 30px;
   }
-  .bianjiKucunInfo .el-form{
+  .stockInfo .bianjiKucunInfo .el-form{
     margin: auto 10px;
   }
 </style>

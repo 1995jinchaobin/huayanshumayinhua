@@ -59,7 +59,7 @@
       </div>
     </div>
     <div>
-      <el-drawer size="50%" title="面料详情" :visible.sync="drawer" direction="rtl" :destroy-on-close="openSet" :before-close="closeCheckDrawer">
+      <el-drawer size="50%" title="面料详情" :visible.sync="miaoliaoIofo" direction="rtl" :destroy-on-close="openSet" :before-close="closeMiaoliaoIofo">
         <div class="checkDrawer" >
           <el-divider content-position="left"></el-divider>
           <el-form>
@@ -162,7 +162,14 @@
               </el-col>
               <el-col :span="10" :offset="operateType=='update' ? 1 : 0">
                 <el-form-item label="面料名称:"  prop="name">
-                  <el-input v-model="detailInfo.name" type="text" placeholder="请输入面料名称"></el-input>
+                  <!-- <el-input v-model="detailInfo.name" type="text" placeholder="请输入面料名称"></el-input> -->
+                  <el-autocomplete
+                    v-model="detailInfo.name"
+                    :fetch-suggestions="querySearch"
+                    placeholder="请输入面料名称"
+                    value-key="name"
+                    @select="handleSelect"
+                  ></el-autocomplete>
                 </el-form-item>
               </el-col>
             </el-row>
@@ -277,13 +284,15 @@
         //编辑类型：add,update
         operateType:'add',
         rules:{
-          name:[{ required: true, message: '请输入面料名称', trigger: 'blur' }],
+          name:[{ required: true, message: '请输入面料名称', trigger: 'change' }],
           num1:[{required: true,message:'请输入半漂仓仓数量',trigger:'blur'}],
           num2:[{required: true,message:'请输入上浆仓数量',trigger:'blur'}],
           num3:[{required: true,message:'请输入成品仓数量',trigger:'blur'}],
           percent:[{required: true,message:'请输入缩水比例',trigger:'blur'}],
           threshold:[{required: true,message:'请输入警报阀值',trigger:'blur'}]
-        }
+        },
+        fabricList: [],
+        miaoliaoIofo:false
       }
     },
     methods: {
@@ -301,6 +310,30 @@
           rows:99999
         }).then((data)=>{
           this.userList = data.data.list;
+        })
+      },
+      // 选择面料
+      querySearch(queryString, cb) {
+        let restaurants = this.fabricList;
+        let results = queryString ? restaurants.filter(this.createFilter(queryString)) : restaurants;
+        // 调用 callback 返回建议列表的数据
+        cb(results);
+      },
+      createFilter(queryString) {
+        return (restaurant) => {
+          return (restaurant.name.toLowerCase().indexOf(queryString.toLowerCase()) === 0);
+        };
+      },
+      handleSelect(item) {
+        this.detailInfo.name = item.name
+      },
+      // 获取面料列表
+      getFabricList() {
+        this.$get('/fabric',{
+          page:1,
+          rows:9999
+        }).then((data)=>{
+          this.fabricList = data.data.list
         })
       },
       search(){
@@ -321,7 +354,7 @@
       },
       //点击查看详情按钮，显示用户详细信息弹框
       showDetail(row) {
-        this.drawer = true;
+        this.miaoliaoIofo = true;
         this.detailInfo = row;
       },
       //点击新增按钮，显示新增弹框
@@ -367,7 +400,10 @@
           customerName: ''
         };
         this.customerName = '';
-        this.$refs.fabricForm.resetFields()
+        this.$refs['fabricForm'].resetFields()
+      },
+      closeMiaoliaoIofo() {
+        this.miaoliaoIofo = false
       },
       //点击保存按钮
       add(){
@@ -421,25 +457,15 @@
       // 根据id查找面料列表
     getDataOfKey () {
       this.$get('/fabric/'+this.dataKey).then((data)=>{
-        // console.log(data.data.list)
-        // console.log(data.data)
-        // this.rukuList = data.data.list
         const a = new Array()
         a[0] = data.data
-        // console.log(a)
-        // a[0] = data.data
         this.tableData = a
-        // this.total = data.data.total
-        // console.log(this.total)
-        // console.log(this.tableData)
       })
     }
     },
     created(){
-      // console.log(this.$route.params)
       if (this.$route.params.key!==undefined){
         this.dataKey = this.$route.params.key
-        // console.log(this.$route.params.key)
         this.getDataOfKey()
       } else {
         this.getData()
@@ -453,8 +479,8 @@
       }
     },
     mounted() {
-      // this.getData();
-      this.getUserList();
+      this.getUserList()
+      this.getFabricList()
     },
     computed: {
       ...mapGetters([

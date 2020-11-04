@@ -754,7 +754,6 @@
           //  let baseUrl = 'https://www.yinhuachaoshi.com/order'//线上地址
            let url = `/order/export?startTime=${this.searchParams.startTime}&endTime=${this.searchParams.endTime}`;
            window.open(baseUrl + url,'_block');
-          //  console.log(baseUrl + url,'_block')
          }
       }
     },

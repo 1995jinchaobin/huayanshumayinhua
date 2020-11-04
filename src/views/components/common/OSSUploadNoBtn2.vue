@@ -48,12 +48,8 @@
                         self.createReader(file, function (w, h) {
                             self.img.width=w;
                             self.img.height=h
-                            // console.log(self.img)
-                            // console.log(parseInt(self.img.width)<448)
-                            // console.log(parseInt(self.img.width)>1024)
                             var types = 'jpg,jpeg,png,JPG,PNG,JPEG'
                             if (types.indexOf(file.name.substring(file.name.indexOf('.')+1,file.name.length))<=-1) {
-                                // console.log('---')
                                 self.errMsg = '请上传图片格式的文件';
                                 self.showInfo = 1;
                                 setTimeout(function(){
@@ -75,7 +71,6 @@
                                     return;
                                 }
                                 else if (parseInt(self.img.width)<448) {
-                                    // console.log('---')
                                     self.errMsg = '图片的宽必须大于448像素';
                                     self.showInfo = 1;
                                     setTimeout(function(){
@@ -113,7 +108,6 @@
                                     return;
                                 }
                             }else if(self.type==4){
-                                // console.log(file.size)
                                 if (file.size/1024/1024>10) {
                                     self.errMsg = '文件大小不能超过10M';
                                     self.showInfo = 1;

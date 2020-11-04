@@ -215,10 +215,54 @@ export default {
           left: 'right',
           top: 'center',
           feature: {
-              mark: {show: true},
-              dataView: {show: true, readOnly: false},
-              saveAsImage: {show: true}
-          }
+            mark: {show: true},
+            dataView: {
+              show: true,
+              readOnly: false,
+              lang: ['数据视图', '关闭', '导出'],
+              optionToContent: function(opt) {
+                let axisData = opt.xAxis[0].data;
+                let series = opt.series;
+                let table = '<table border="1" style="width:100%;border-collapse:collapse;text-align:center"><tbody><tr>'
+                            + '<td>时间</td>'
+                            + '<td>' + series[0].name + '</td>'
+                            + '<td>' + series[1].name + '</td>'
+                            + '</tr>';
+                for (let i = 0, l = axisData.length; i < l; i++) {
+                    table += '<tr>'
+                            + '<td>' + axisData[i] + '</td>'
+                            + '<td>' + series[0].data[i] + '</td>'
+                            + '<td>' + series[1].data[i] + '</td>'
+                            + '</tr>';
+                }
+                table += '</tbody></table>';
+                return table;
+              },
+              contentToOption(HTMLDomElement, opt){
+                require.ensure([], () => {
+                  const { export_json_to_excel } = require('../../../excel/Export2Excel');
+                  const tHeader = ['时间','下单米数', '出货米数'];
+                  // 上面设置Excel的表格第一行的标题
+                  const filterVal = ['time', 'xiadan', 'chuhuo'];
+                  // 上面的index、nickName、name是tableData里对象的属性
+                  const i = opt.xAxis[0].data.length
+                  let list = []
+                  for (let a = 0;a<i;a++){
+                    const obj = {
+                      time:opt.xAxis[0].data[a],
+                      xiadan:opt.series[0].data[a],
+                      chuhuo:opt.series[1].data[a]
+                    }
+                    list.push(obj)
+                  }
+                  //把data里的tableData存到list
+                  const data = window.jsonData(filterVal, list);
+                  export_json_to_excel(tHeader, data, '列表excel');
+                })
+              }
+            },
+            saveAsImage: {show: true}
+          },
         },
         grid: {
           left: '3%',
@@ -321,7 +365,6 @@ export default {
           //处理
           this.orderCompleteData = echarts.init(document.getElementById('orderCompleteData'));
           this.orderCompleteData.setOption(sellCountOption);
-          // console.log(this.orderCompleteData)
         })
       });
     },
@@ -364,7 +407,39 @@ export default {
           top: 'center',
           feature: {
               mark: {show: true},
-              dataView: {show: true, readOnly: false},
+              dataView: {
+                show: true,
+                readOnly: false,
+                lang: ['数据视图', '关闭', '导出'],
+                optionToContent: function(opt) {
+                  let axisData = opt.series[0].data
+                  let series = opt.series;
+                  let table = '<table border="1" style="width:100%;border-collapse:collapse;text-align:center"><tbody><tr>'
+                              + '<td>' + series[0].name + '</td>'
+                              + '<td>' + '出货米数' + '</td>'
+                              + '</tr>';
+                  for (let i = 0, l = axisData.length; i < l; i++) {
+                      table += '<tr>'
+                              + '<td>' + axisData[i].name + '</td>'
+                              + '<td>' + axisData[i].value + '</td>'
+                              + '</tr>';
+                  }
+                  table += '</tbody></table>';
+                  return table;
+                },
+                contentToOption(HTMLDomElement, opt){
+                  require.ensure([], () => {
+                    const { export_json_to_excel } = require('../../../excel/Export2Excel');
+                    const tHeader = ['客户名', '出货米数'];
+                    // 上面设置Excel的表格第一行的标题
+                    const filterVal = ['name', 'value'];
+                    // 上面的index、nickName、name是tableData里对象的属性
+                    const list = opt.series[0].data;  //把data里的tableData存到list
+                    const data = window.jsonData(filterVal, list);
+                    export_json_to_excel(tHeader, data, '列表excel');
+                  })
+                }
+              },
               saveAsImage: {show: true}
           }
         },
@@ -448,11 +523,43 @@ export default {
           left: 'right',
           top: 'center',
           feature: {
+              saveAsImage: {show: true},
               mark: {show: true},
-              dataView: {show: true, readOnly: false},
-              saveAsImage: {show: true}
-          }
-        },
+              dataView: {
+                show: true,
+                readOnly: false,
+                lang: ['数据视图', '关闭', '导出'],
+                optionToContent: function(opt) {
+                  let axisData = opt.series[0].data
+                  let series = opt.series;
+                  let table = '<table border="1" style="width:100%;border-collapse:collapse;text-align:center"><tbody><tr>'
+                              + '<td>' + series[0].name + '</td>'
+                              + '<td>' + '出货米数' + '</td>'
+                              + '</tr>';
+                  for (let i = 0, l = axisData.length; i < l; i++) {
+                      table += '<tr>'
+                              + '<td>' + axisData[i].name + '</td>'
+                              + '<td>' + axisData[i].value + '</td>'
+                              + '</tr>';
+                  }
+                  table += '</tbody></table>';
+                  return table;
+                },
+                contentToOption(HTMLDomElement, opt){
+                  require.ensure([], () => {
+                    const { export_json_to_excel } = require('../../../excel/Export2Excel');
+                    const tHeader = ['面料品类', '出货米数'];
+                    // 上面设置Excel的表格第一行的标题
+                    const filterVal = ['name', 'value'];
+                    // 上面的index、nickName、name是tableData里对象的属性
+                    const list = opt.series[0].data;  //把data里的tableData存到list
+                    const data = window.jsonData(filterVal, list);
+                    export_json_to_excel(tHeader, data, '列表excel');
+                  })
+                }
+              }
+            }
+          },
         series: [
             {
                 name: '面料',
@@ -490,6 +597,11 @@ export default {
     this.setOrderEchart();
     this.setCustomerOutChart();
     this.setFabricOutChart();
+  },
+  created () {
+    window['jsonData'] =(filterVal, jsonData)=> {
+      return jsonData.map(v => filterVal.map(j => v[j]))
+    }
   }
 }
 </script>

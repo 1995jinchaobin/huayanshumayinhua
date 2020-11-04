@@ -9,15 +9,6 @@
       <div class="dataContent">
         <div class="searchArea">
           <div class="searchForm">
-             <!-- <el-tabs v-model="activeName" type="border-card" @tab-click="handleClick">
-              <el-tab-pane label="库存信息" name="first">
-                <stockInfo/>
-              </el-tab-pane>
-              <el-tab-pane label="入库单" name="second">
-                <inboundList/>
-              </el-tab-pane>
-              <el-tab-pane label="出库单" name="third">出库单</el-tab-pane>
-            </el-tabs> -->
             <el-tabs v-model="currentView" type="card">
               <el-tab-pane label="库存信息" name="StockInfo"></el-tab-pane>
               <el-tab-pane label="入库" name="InboundList"></el-tab-pane>
@@ -29,24 +20,12 @@
         </div>
       </div>
     </div>
-    <!-- 新增入库抽屉
-    <div>
-      <el-drawer
-        :visible.sync="drawer"
-        :before-close="closeCheckDrawer">
-        <span>我来啦!</span>
-      </el-drawer>
-    </div> -->
   </div>
 </template>
 
 <script>
-// import StockInfo from '../../../views/components/content/StockInfo'
-// import InboundList from '../../../views/components/content/InboundList'
 export default {
   components: {
-    // StockInfo,
-    // InboundList,
     StockInfo: resolve => {
       require(['../../../views/components/content/StockInfo'], resolve)
     },
@@ -66,32 +45,12 @@ export default {
   },
   methods: {
     handleClick(tab, event, name) {
-      // console.log(tab, event);
-      // console.log(name)
     }
-    // // 打开新增入库
-    // openUpdateDrawer() {
-    //   this.drawer = true
-    // },
-    // // 关闭抽屉清空数据
-    // closeCheckDrawer() {
-    //   this.drawer = false
-    // }
   }
 }
 </script>
 
 <style>
-  /* .storeManagement .title{
-    font-family: PingFangSC-Medium;
-    font-size: 20px;
-    color: rgba(0, 0, 0, 0.85);
-    line-height: 28px;
-    height: 28px;
-    padding-left: 32px;
-    padding-top: 18px;
-    font-weight: bold;
-  } */
   span{outline:none}
   .storeManagement {
     overflow-y: auto;

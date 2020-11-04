@@ -177,16 +177,11 @@ export default {
   methods: {
     // 获取入库列表
     getRukuList () {
-      // console.log(this.rukuParams)
       this.$get('/inventory/in/list',{
         ...this.rukuParams
       }).then((data)=>{
-        // console.log(data.data.list)
-        // console.log(data)
         this.rukuList = data.data.list
-        // this.tableData = data.data.list
         this.total = data.data.total
-        // console.log(this.total)
       })
     },
     headFirst({row, colunm, rowIndex, columnIndex}) {
@@ -203,26 +198,22 @@ export default {
     },
     // 搜索触发
     searchList (value) {
-      // console.log(value)
       this.rukuParams = value
       this.getRukuList()
     },
     // 入库明细按钮
     rukuInfoBtn (value) {
-      // console.log(value)
       this.rukuParamsInfo = value
       this.rukuDrawer = true
     },
     // 入库上传码单按钮
     upLoadMadan (a) {
-      // console.log(a)
       this.upMadanParamsId = a.id
       this.upMadan = a.customerName
       this.upmadanDrawer =true
     },
     // 查看码单按钮
     lookMadan (a) {
-      // console.log(a)
       this.lookMadanName = a.customerName
       this.madanUrl = a.url
       this.madanDrawer = true
@@ -242,32 +233,20 @@ export default {
     },
     // 上传码单
     changeImg(a) {
-      // console.log('上传图片')
       // 获取图片
       const fr = new FileReader()
       fr.readAsDataURL(a.target.files[0])
       fr.onload = e=> {
-        // console.log(e.target.result)
         this.lookUrl = e.target.result
       }
       this.file = document.getElementById("imgFile").files[0]
       this.formData = new FormData()
-      // if (file) {
       this.formData.append('file', this.file);　　
       this.formData.append('type', 3)
-      // }
-      // axios.post('/file',formData).then(res=>{
-      //   console.log(res)
-      //   messageUtil.message.success(res.data.message)
-      //   if (res.data.code ===0){
-      //     this.upMadanParams.url = res.data.data
-      //   }
-      // })
     },
     // 获取码单url地址
     getMadanUrl() {
       axios.post('/file',this.formData).then(res=>{
-        // console.log(res)
         if (res.data.code ===0){
           this.upMadanParams.url = res.data.data
         }
@@ -275,47 +254,16 @@ export default {
     },
     // 保存上传码单
     baocunMadan () {
-      // this.getMadanUrl()
       axios.post('/file',this.formData).then(res=>{
-        // console.log(res)
         if (res.data.code ===0){
           this.upMadanParams.url = res.data.data
           this.$put('/inventory/in/'+this.upMadanParamsId,this.upMadanParams).then((data)=>{
-          // console.log(data)
           messageUtil.message.success(data.message)
           this.closeupMadanDrawer();
           this.getRukuList();
           })
         }
       })
-
-      // console.log(this.upMadanParamsId)
-      // console.log(this.upMadanParams)
-      // this.$put('/inventory/in/'+this.upMadanParamsId,this.upMadanParams).then((data)=>{
-      // console.log(data)
-      // messageUtil.message.success(data.message)
-      // this.closeupMadanDrawer();
-      // this.getRukuList();
-      // })
-      // this.getRukuList()
-      // this.closeAddStockDrawer()
-      // if(this.file!==''){
-        
-      // }
-      // axios.post('/file',this.formData).then(res=>{
-      //   console.log(res)
-      //   // messageUtil.message.success(res.data.message)
-      //   if (res.data.code ===0){
-      //     this.upMadanParams.url = res.data.data
-      //   }
-      // })
-      // console.log(this.upMadanParams)
-      // this.$put('/inventory/in/'+this.upMadanParamsId,this.upMadanParams).then((data)=>{
-      // console.log(data)
-      // messageUtil.message.success(data.message)
-      // this.closeupMadanDrawer();
-      // this.getRukuList();
-      // })
     },
     // 关闭入库抽屉
     closeRukuDrawer () {
@@ -366,7 +314,6 @@ export default {
     }
   },
   created () {
-    // console.log(this.rukuParams)
     this.getRukuList()
   }
 }

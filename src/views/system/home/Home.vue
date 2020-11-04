@@ -149,16 +149,14 @@ export default {
             {name:'数据管理',key:'数据管理',subSysMenus:[{name:'面料管理',url:'/fabricManage'}]},
             {name:'订单管理',key:'订单管理',subSysMenus:[{name:'订单管理',url:'/orderManage'}]}
           ]
-        }else{
-          this.menus = [
-            {name:'用户管理',key:'用户管理',subSysMenus:[{name:'员工管理',url:'/userManage'},{name:'客户管理',url:'/customerManage'}]},
-            {name:'数据管理',key:'数据管理',subSysMenus:[{name:'面料管理',url:'/fabricManage'},{name:'瑕疵管理',url:'/flaw'},{name:'机器管理',url:'/machineManage'},{name:'配置方案管理',url:'/configuration'},{name:"IP锁定",url:'/setIp'},{name:'数据统计',url:"/statistics"},{name:'Websocket',url:"/Websocket"}]},
-            {name:'订单管理',key:'订单管理',subSysMenus:[{name:'订单管理',url:'/orderManage'}]},
-            // {name:'仓储管理',key:'仓储管理',subSysMenus:[{name:'仓储管理',url:'/home'}]}
-            {name:'仓储管理',key:'仓储管理',subSysMenus:[{name:'仓库管理',url:'/storeManagement'}]}
-            // {name:'警戒管理',key:'警戒管理',subSysMenus:[{name:'警戒管理',url:'/warnMessage'}]}
-          ]
-        }
+        } else{
+            this.menus = [
+              {name:'用户管理',key:'用户管理',subSysMenus:[{name:'员工管理',url:'/userManage'},{name:'客户管理',url:'/customerManage'}]},
+              {name:'数据管理',key:'数据管理',subSysMenus:[{name:'面料管理',url:'/fabricManage'},{name:'瑕疵管理',url:'/flaw'},{name:'机器管理',url:'/machineManage'},{name:'配置方案管理',url:'/configuration'},{name:"IP锁定",url:'/setIp'},{name:'数据统计',url:"/statistics"},{name:'Websocket',url:"/Websocket"}]},
+              {name:'订单管理',key:'订单管理',subSysMenus:[{name:'订单管理',url:'/orderManage'}]},
+              {name:'仓储管理',key:'仓储管理',subSysMenus:[{name:'仓库管理',url:'/storeManagement'}, {name:'操作记录',url:'/adminRecord'}]}
+            ]
+          }
       }
     },
     toWarnMessage() {

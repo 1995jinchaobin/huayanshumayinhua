@@ -82,42 +82,17 @@ export default new Router({
           component: resolve => require(['@/views/System/manage/Websocket'],resolve)
         },
         {
-          path:'/ceshi',
-          name:'ceshi',
-          component: resolve => require(['@/views/System/manage/ceshi'],resolve)
-        },
-        {
           path:'/warnMessage',
           name:'warnMessage',
           component: resolve => require(['@/views/System/manage/WarnMessage'],resolve)
+        },
+        {
+          path:'/adminRecord',
+          name:'AdminRecord',
+          component: resolve => require(['@/views/System/manage/AdminRecord'],resolve)
         }
-        // {
-        //   path:'/storage',
-        //   name:'Storage',
-        //   component: resolve => require(['@/views/storage/Storage'],resolve)
-        // }
       ]
     },
-    // {
-    //   path:'/Knowledge',
-    //   name:'Knowledge',
-    //   component: resolve => (require(['@/views/components/own/OwnHome'],resolve))
-    // },
-    // {
-    //   path:'/Addpicture',
-    //   name:'AddPicture',
-    //   component: resolve => (require(['@/views/components/own/OwnAddPicture'],resolve))
-    // },
-    // {
-    //   path:"/History",
-    //   name:'History',
-    //   component: resolve => (require(['@/views/components/own/OwnHistory'],resolve))
-    // },
-    // {
-    //   path:'/picLogin',
-    //   name:'picLogin',
-    //   component: resolve => (require(['@/views/components/own/OwnLogin'],resolve))
-    // }
   ],
   mode:'history'
 })
