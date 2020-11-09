@@ -247,8 +247,8 @@
                       <div class="n6 flexCenter borderR">8</div>
                       <div class="n6 flexCenter borderR">9</div> -->
                       <div class="n7 flexCenter borderR">米数</div>
-                      <div class="n10 flexCenter borderR">下单日期</div>
-                      <div class="n8 flexCenter">备注</div>
+                      <div class="n10 flexCenter">下单日期</div>
+                      <div class="n8 flexCenter borderL">备注</div>
                     </div>
                     <div>
                       <div v-for="(item,index) in tableDayin" :key="index" class="dayin">
@@ -742,6 +742,13 @@ export default {
 .borderT{
   border-top:1px solid #ccc;
 }
+.borderTL{
+  border-top:1px solid #ccc;
+  border-LEFT:1px solid #ccc;
+}
+.borderL{
+  border-left:1px solid #ccc ;
+}
 .n1{
   width: 10%;
 }
@@ -765,12 +772,14 @@ export default {
 }
 .n8{
   width: 15%;
+  /* box-sizing: border-box; */
 }
 .n9{
   width: 16.66667%;
 }
 .n10{
   width: 10%;
+  /* box-sizing: border-box; */
 }
 .hui{
   background-color: #EEEEEE;
@@ -816,8 +825,8 @@ export default {
   padding-right: 20px;
 }
 #printChuKuArea{
-  width: 20cm;
-  height: 12.5cm;
+  width: 18cm;
+  height: 12cm;
   position: absolute;
   left: 0;
   top: 0;

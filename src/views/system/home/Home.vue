@@ -96,7 +96,10 @@ export default {
   },
   created() {
     this.warnMessage()
-    this.timer = setInterval(this.warnMessage,10000)
+    // this.timer = setInterval(this.warnMessage,10000)
+    this.timer =setInterval(() => {
+      setTimeout(this.warnMessage, 0)
+    }, 10000)
     // this.defaultActive = window.sessionStorage.getItem('defaultActive')
     if(window.sessionStorage.getItem('defaultActive')){
       this.defaultActive = window.sessionStorage.getItem('defaultActive')
@@ -147,7 +150,8 @@ export default {
         if(localStorage.getItem("userType") == 3){
           this.menus = [
             {name:'数据管理',key:'数据管理',subSysMenus:[{name:'面料管理',url:'/fabricManage'}]},
-            {name:'订单管理',key:'订单管理',subSysMenus:[{name:'订单管理',url:'/orderManage'}]}
+            {name:'订单管理',key:'订单管理',subSysMenus:[{name:'订单管理',url:'/orderManage'}]},
+            {name:'仓储管理',key:'仓储管理',subSysMenus:[{name:'仓库管理',url:'/storeManagement'}]}
           ]
         } else{
             this.menus = [

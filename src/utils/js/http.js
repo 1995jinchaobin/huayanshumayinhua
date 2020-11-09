@@ -6,14 +6,13 @@ import router from '../../router';
 
 axios.defaults.timeout = 5000;
 // 设置默认URL
- axios.defaults.baseURL = 'http://192.168.1.115:9999/';
-//axios.defaults.baseURL = 'https://www.yinhuachaoshi.com/order';
+//  axios.defaults.baseURL = 'http://192.168.1.115:9999/';  //线下
+axios.defaults.baseURL = 'https://www.yinhuachaoshi.com/order';  //线上
 // 设置post请求头
 axios.defaults.headers.post['Content-Type'] = 'application/json;charset=UTF-8';
 // http 请求拦截
 axios.interceptors.request.use(
   config => {
-    // config.data = JSON.stringify(config.data);
     config.headers.token = defaultMethod.getItem('token');
     config.header = {
       'Content-Type':'application/x-www-form-urlencoded',
@@ -38,9 +37,6 @@ axios.interceptors.response.use(
             path:'/'
           })
         break;
-      // case 7:
-      //   Message.error({message: '请勿重复提交!'})
-      //   break;
       case -1:
         Message.error({message: response.data.message, type: 'error'})
         break;

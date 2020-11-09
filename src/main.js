@@ -8,8 +8,6 @@ import echarts from 'echarts'
 Vue.component('chart', echarts)
 import store from './store/store'
 import Print from 'vue-print-nb'
-// import Blob from './excel/Blob'
-// import Export2Excel from './excel/Export2Excel.js'
 
 // 全局注册网络请求
 import {post,get,deletefn,put} from './utils/js/http';
@@ -19,8 +17,10 @@ Vue.prototype.$get = get;
 Vue.prototype.$post = post;
 Vue.prototype.$deletefn = deletefn;
 Vue.prototype.$put = put;
-Vue.prototype.$imgUrl = 'http://192.168.1.115:9999/image/'
-Vue.prototype.$baseUrl = 'http://192.168.1.115:9999'
+// Vue.prototype.$imgUrl = 'http://192.168.1.115:9999/image/'  //线下
+Vue.prototype.$imgUrl = 'https://www.yinhuachaoshi.com/order/image/'  //线上
+// Vue.prototype.$baseUrl = 'https://www.yinhuachaoshi.com/order/'
+// Vue.prototype.$baseUrl = 'http://192.168.1.115:9999'
 Vue.config.productionTip = false
 Vue.use(ElementUI)
 Vue.use(Print)

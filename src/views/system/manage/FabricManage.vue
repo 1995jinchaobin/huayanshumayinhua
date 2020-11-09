@@ -162,7 +162,6 @@
               </el-col>
               <el-col :span="10" :offset="operateType=='update' ? 1 : 0">
                 <el-form-item label="面料名称:"  prop="name">
-                  <!-- <el-input v-model="detailInfo.name" type="text" placeholder="请输入面料名称"></el-input> -->
                   <el-autocomplete
                     v-model="detailInfo.name"
                     :fetch-suggestions="querySearch"
@@ -173,24 +172,7 @@
                 </el-form-item>
               </el-col>
             </el-row>
-            <!-- <el-row> -->
-              <!-- <el-col :span="12">
-                <el-form-item label="半漂仓数量:" prop="num1">
-                  <el-input v-model="detailInfo.num1" type="text" placeholder="请输入半漂仓数量"></el-input>
-                </el-form-item>
-              </el-col> -->
-              <!-- <el-col :span="10" :offset="1">
-                <el-form-item label="上浆仓数量:"  prop="num2">
-                  <el-input v-model="detailInfo.num2" type="text" placeholder="请输入上浆仓数量"></el-input>
-                </el-form-item>
-              </el-col> -->
-            <!-- </el-row> -->
             <el-row>
-              <!-- <el-col :span="12">
-                <el-form-item label="成品仓数量:" prop="num3">
-                  <el-input v-model="detailInfo.num3" type="text" placeholder="请输入成品仓数量"></el-input>
-                </el-form-item>
-              </el-col> -->
               <el-col :span="10" :offset="1">
                 <el-form-item label="警报阀值:"  prop="threshold">
                   <el-input v-model="detailInfo.threshold" type="text" placeholder="请输入警报阀值"></el-input>
@@ -334,6 +316,21 @@
           rows:9999
         }).then((data)=>{
           this.fabricList = data.data.list
+          function compare(property){
+            return function(a,b){
+              let value1 = a[property];
+              let value2 = b[property];
+              return value2 - value1;
+            }
+          }
+          const arrAll = data.data.list.sort(compare('sort'))
+          let obj = {}
+          let arr = []
+          arr = arrAll.reduce(function (item, next) {
+            obj[next.name] ? '' : obj[next.name] = true && item.push(next);
+            return item;
+          }, [])
+          this.fabricList = arr
         })
       },
       search(){
@@ -420,6 +417,11 @@
                   }
                 })
               };
+              const obj = this.fabricList.find(item=>item.name===this.detailInfo.name)
+              if(obj){
+                this.$put(`/fabric/sort?id=${obj.id}`,{}).then((data)=>{
+              })
+              }
               this.$post('/fabric',this.detailInfo).then((data)=>{
                 messageUtil.message.success(data.message)
                 this.closeCheckDrawer();
