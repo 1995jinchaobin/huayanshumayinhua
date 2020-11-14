@@ -1,7 +1,7 @@
 <template>
   <div class="outboundList">
     <div class="tagSearchHebing">
-      <storeManageSearch @searchList="searchList" @daochu="daochu"></storeManageSearch>
+      <storeManageSearch @searchList="searchList" @daochu="daochu" :companyList="companyList" :regionlist="regionlist"></storeManageSearch>
       <div>
         <el-button @click="hebingDayin">合并打印</el-button>
       </div>
@@ -309,6 +309,10 @@ import messageUtil from '../../../utils/js/MessageUtil'
 export default {
   components: {
     StoreManageSearch
+  },
+  props: {
+    companyList: Array,
+    regionlist: Array
   },
   data () {
     return {

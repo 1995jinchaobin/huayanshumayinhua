@@ -16,7 +16,8 @@
               <el-form-item>
                 <el-button plain @click="clearSearchInfo">重&nbsp;&nbsp;置</el-button>
                 <el-button plain @click="getData">搜&nbsp;&nbsp;索</el-button>
-                <el-button plain @click="openUpdateDrawer">新&nbsp;&nbsp;增</el-button>
+                <el-button plain @click="openUpdateDrawer">新增客户面料</el-button>
+                <el-button plain @click="showJIngxiaoDraw">新增经销面料</el-button>
               </el-form-item>
             </el-form>
           </div>
@@ -58,6 +59,7 @@
         </div>
       </div>
     </div>
+    <!-- 面料详情 -->
     <div>
       <el-drawer size="50%" title="面料详情" :visible.sync="miaoliaoIofo" direction="rtl" :destroy-on-close="openSet" :before-close="closeMiaoliaoIofo">
         <div class="checkDrawer" >
@@ -149,11 +151,23 @@
         </div>
       </el-drawer>
     </div>
+    <!-- 添加修改面料 -->
     <div>
       <el-drawer size="50%" :title="drawerTitle" :visible.sync="updateDrawer"  direction="rtl" :destroy-on-close="openSet" :before-close="closeCheckDrawer">
         <div class="checkDrawer">
           <el-divider content-position="left"></el-divider>
           <el-form :model="detailInfo" ref="fabricForm" :rules="rules" label-width="100px">
+            <el-row>
+              <el-col :span="12" v-if="drawerTitle!=='编辑面料'">
+                <el-form-item label="面料来源:">
+                  <el-radio v-model="radio" label="1">加工</el-radio>
+                  <!-- <el-radio v-model="radio" label="2">经销</el-radio> -->
+                </el-form-item>
+              </el-col>
+              <!-- <el-col :span="12">
+                <el-button type="primary" @click="showJIngxiaoDraw">新增经销面料</el-button>
+              </el-col> -->
+            </el-row>
             <el-row>
               <el-col :span="12" v-if="operateType=='update'">
                 <el-form-item label="编号:">
@@ -164,7 +178,18 @@
                 <el-form-item label="面料名称:"  prop="name">
                   <el-autocomplete
                     v-model="detailInfo.name"
+                    v-if="radio==='1'"
+                    :disabled="drawerTitle==='编辑面料'"
                     :fetch-suggestions="querySearch"
+                    placeholder="请输入面料名称"
+                    value-key="name"
+                    @select="handleSelect"
+                  ></el-autocomplete>
+                  <el-autocomplete
+                    v-model="detailInfo.name"
+                    v-if="radio==='2'"
+                    :disabled="drawerTitle==='编辑面料'"
+                    :fetch-suggestions="querySearch1"
                     placeholder="请输入面料名称"
                     value-key="name"
                     @select="handleSelect"
@@ -174,7 +199,7 @@
             </el-row>
             <el-row>
               <el-col :span="10" :offset="1">
-                <el-form-item label="警报阀值:"  prop="threshold">
+                <el-form-item label="警报阀值:" prop="threshold">
                   <el-input v-model="detailInfo.threshold" type="text" placeholder="请输入警报阀值"></el-input>
                 </el-form-item>
               </el-col>
@@ -187,14 +212,19 @@
               </el-col>
               <el-col :span="10" :offset="1">
                 <el-form-item label="所属客户:">
-                    <el-select v-model="customerName" placeholder="请选择" v-if="operateType == 'add'" filterable>
+                    <el-select
+                      v-model="customerName"
+                      placeholder="请选择"
+                      v-if="operateType == 'add'"
+                      filterable
+                      :disabled="drawerTitle==='编辑面料'">
                       <el-option
                         v-for="item in userList"
                         :key="item.id"
                         :value="item.name">
                       </el-option>
                     </el-select>
-                    <el-select v-model="detailInfo.customerName" placeholder="请选择" v-else filterable>
+                    <el-select v-model="detailInfo.customerName" v-else filterable :disabled="drawerTitle==='编辑面料'">
                       <el-option
                         v-for="item in userList"
                         :key="item.id"
@@ -225,6 +255,42 @@
         </div>
       </el-drawer>
     </div>
+    <!-- 新增经销面料 -->
+    <div class="addJingxiaoMianliao">
+      <el-drawer
+        title="新增经销面料"
+        size="50%"
+        :visible.sync="jingxiaoDrawer"
+        :before-close="jingxiaoClose">
+        <div class="jingxiao">
+           <el-form :model="jingxiaoInfo" ref="jingxiaoForm" :rules="jingxiaoRules" label-width="100px">
+             <el-form-item label="面料名称:"  prop="name">
+              <el-autocomplete
+                v-model="jingxiaoInfo.name"
+                :fetch-suggestions="querySearch1"
+                placeholder="请输入面料名称"
+                value-key="name"
+                @select="handleSelect"
+              ></el-autocomplete>
+             </el-form-item>
+             <el-form-item label="警报阀值:"  prop="threshold">
+               <el-input v-model="jingxiaoInfo.threshold"></el-input>
+             </el-form-item>
+             <el-form-item label="缩水比例:"  prop="percent">
+               <el-input v-model="jingxiaoInfo.percent"></el-input>
+             </el-form-item>
+             <el-form-item label="备注:">
+                <el-input type="textarea" v-model="jingxiaoInfo.note"></el-input>
+              </el-form-item>
+           </el-form>
+           <div class="jingxiaoBtn">
+              <el-button type="primary" @click="addJingxiaoBtn">保存</el-button>
+              <el-button type="primary" @click="jingxiaoClose">取消</el-button>
+           </div>
+           
+        </div>
+      </el-drawer>
+    </div>
   </div>
 
 </template>
@@ -236,6 +302,7 @@
   export default {
     data() {
       return {
+        radio:'1',
         dataKey:null,
         openSet:true,
         //查询参数
@@ -274,7 +341,19 @@
           threshold:[{required: true,message:'请输入警报阀值',trigger:'blur'}]
         },
         fabricList: [],
-        miaoliaoIofo:false
+        miaoliaoIofo:false,
+        jingxiaoDrawer:false,
+        jingxiaoInfo: {
+          fkCustomerId: '-10',
+          customerName: '经销'
+        },
+        jiagongMiaoliaolist: [],
+        jingxiaoMiaoliaoList: [],
+        jingxiaoRules: {
+          name:[{ required: true, message: '请输入面料名称', trigger: 'change' }],
+          percent:[{required: true,message:'请输入缩水比例',trigger:'blur'}],
+          threshold:[{required: true,message:'请输入警报阀值',trigger:'blur'}]
+        }
       }
     },
     methods: {
@@ -286,6 +365,7 @@
           this.page.total = data.data.total;
         })
       },
+      // 获取客户
       getUserList(){
         this.$get('/customer',{
           page:1,
@@ -294,20 +374,36 @@
           this.userList = data.data.list;
         })
       },
-      // 选择面料
+      // 选择加工面料
       querySearch(queryString, cb) {
-        let restaurants = this.fabricList;
+        let restaurants = this.jiagongMiaoliaolist;
         let results = queryString ? restaurants.filter(this.createFilter(queryString)) : restaurants;
         // 调用 callback 返回建议列表的数据
-        cb(results);
+        cb(results)
       },
       createFilter(queryString) {
         return (restaurant) => {
           return (restaurant.name.toLowerCase().indexOf(queryString.toLowerCase()) === 0);
         };
       },
+      // 选择经销面料选择框
+      querySearch1 (queryString, cb) {
+        let restaurants = this.jingxiaoMiaoliaoList;
+        let results = queryString ? restaurants.filter(this.createFilter(queryString)) : restaurants;
+        // 调用 callback 返回建议列表的数据
+        cb(results);
+      },
+      // handleSelect(item) {
+      //   this.detailInfo.name = item.name
+      // },
       handleSelect(item) {
         this.detailInfo.name = item.name
+        // if (this.detailInfo.percent ==='') {
+        //   this.detailInfo.percent = item.percent
+        // }
+        // if (!this.detailInfo.threshold==='') {
+        //   this.detailInfo.threshold = item.threshold
+        // }
       },
       // 获取面料列表
       getFabricList() {
@@ -331,6 +427,7 @@
             return item;
           }, [])
           this.fabricList = arr
+          this.fabricListFenlei()
         })
       },
       search(){
@@ -356,6 +453,7 @@
       },
       //点击新增按钮，显示新增弹框
       openUpdateDrawer() {
+        this.radio = '1'
         this.updateDrawer = true;
         this.detailInfo = {
           name:'',
@@ -366,6 +464,11 @@
       },
       //点击编辑按钮，显示编辑弹框
       check(row) {
+        if (row.fkCustomerId===-10){
+          this.radio = '2'
+        } else {
+          this.radio = '1'
+        }
         this.updateDrawer = true;
         this.detailInfo = {
           id:row.id,
@@ -402,6 +505,29 @@
       closeMiaoliaoIofo() {
         this.miaoliaoIofo = false
       },
+      // 新增经销面料按钮
+      showJIngxiaoDraw () {
+        this.jingxiaoDrawer = true
+      },
+      // 关闭经销面料窗口
+      jingxiaoClose () {
+        this.$refs['jingxiaoForm'].resetFields()
+        this.jingxiaoDrawer = false
+      },
+      // 保存经销数据按钮
+      addJingxiaoBtn () {
+        this.$refs['jingxiaoForm'].validate((valid) => {
+          if (!valid) return
+          this.$post('/fabric',this.jingxiaoInfo).then((data)=>{
+            messageUtil.message.success(data.message)
+            if (data.code === 0) {
+              this.jingxiaoClose()
+              this.getData()
+              this.getFabricList()
+            }
+          })
+        })
+      },
       //点击保存按钮
       add(){
         //判断
@@ -426,6 +552,7 @@
                 messageUtil.message.success(data.message)
                 this.closeCheckDrawer();
                 this.getData();
+                this.getFabricList()
               })
             }else{
               if(this.detailInfo.customerName != ''){
@@ -440,12 +567,13 @@
                 messageUtil.message.success(data.message)
                 this.closeCheckDrawer();
                 this.getData();
+                this.getFabricList()
               })
             }
           } else {
             return false;
           }
-        });
+        })
       },
       //删除
       HandlerDelete(fabricInfo){
@@ -457,13 +585,28 @@
         })
       },
       // 根据id查找面料列表
-    getDataOfKey () {
-      this.$get('/fabric/'+this.dataKey).then((data)=>{
-        const a = new Array()
-        a[0] = data.data
-        this.tableData = a
-      })
-    }
+      getDataOfKey () {
+        this.$get('/fabric/'+this.dataKey).then((data)=>{
+          const a = new Array()
+          a[0] = data.data
+          this.tableData = a
+        })
+      },
+      // 面料列表分成加工和经销2个数组
+      fabricListFenlei () {
+        const arrA = []
+        const arrB = []
+        const lenght = this.fabricList.length
+        for (let a = 0;a<lenght;a++){
+          if (this.fabricList[a].fkCustomerId===-10) {
+            arrB.push(this.fabricList[a])
+          } else {
+            arrA.push(this.fabricList[a])
+          }
+        }
+        this.jiagongMiaoliaolist = arrA
+        this.jingxiaoMiaoliaoList = arrB
+      }
     },
     created(){
       if (this.$route.params.key!==undefined){
@@ -479,6 +622,8 @@
       if(this.$route.params.toKey){
         this.updateDrawer = true
       }
+      // this.getUserList()
+      // this.getFabricList()
     },
     mounted() {
       this.getUserList()
@@ -570,5 +715,12 @@
     width: 100px;
     height: 100px;
     border-radius: 50px;
+  }
+  .fabricManageContent .addJingxiaoMianliao .jingxiao{
+    margin: 20px;
+    width: 70%;
+  }
+  .jingxiaoBtn{
+    margin-left: 40px;
   }
 </style>

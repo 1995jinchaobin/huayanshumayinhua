@@ -1,7 +1,7 @@
 <template>
   <div class="stockInfo">
     <div class="tagSearch">
-      <storeManageSearch ref="storeSearch" @searchList="searchList" @daochu="daochu">
+      <storeManageSearch ref="storeSearch" @searchList="searchList" @daochu="daochu" :companyList="companyList" :regionlist="regionlist">
           <!-- <el-button plain @daochu="daochuStockInfo">导&nbsp;&nbsp;出</el-button> -->
         <!-- <el-button @click="onSubmit" plain>导&nbsp;&nbsp;出</el-button> -->
       </storeManageSearch>
@@ -15,8 +15,13 @@
       :header-cell-style="headFirst">
       <el-table-column
         align="center"
-        prop="customerName"
+        prop="companyName"
         label="公司名">
+      </el-table-column>
+      <el-table-column
+        align="center"
+        prop="customerName"
+        label="客户名">
       </el-table-column>
       <el-table-column
         prop="fabricName"
@@ -82,15 +87,24 @@
         :before-close="closeAddStockDrawer"
         title="新增入库">
         <el-form label-width="120px" :model="addStockParams" :rules="addStockParamsRules" ref="addStockParamsRef">
-          <el-form-item label="客户:" prop="fkCustomerId">
-            <el-select v-model="addStockParams.fkCustomerId" placeholder="请选择" @change="getUserId">
+          <el-form-item label="公司名:" prop="fkCustomerId">
+            <!-- <el-select v-model="addStockParams.fkCustomerId" placeholder="请选择" @change="getUserId">
               <el-option
                 v-for="item in userList"
                 :key="item.id"
                 :label="item.name"
                 :value="item.id">
               </el-option>
-            </el-select>
+            </el-select> -->
+            <el-autocomplete
+              v-model="addStockUserName"
+              clearable
+              :fetch-suggestions="querySearch"
+              value-key="companyName"
+              placeholder="请输入公司名"
+              @clear="getUserId"
+              @select="getUserId">
+            </el-autocomplete>
           </el-form-item>
           <el-form-item label="面料品类:" prop="fkFabricId">
             <el-select v-model="addStockParams.fkFabricId" placeholder="请选择" filterable>
@@ -210,8 +224,15 @@ export default {
     StoreManageSearch
     // ImgUpload
   },
+  name: 'StockInfo',
+  props: {
+    companyList: Array,
+    regionlist: Array
+  },
   data() {
     return {
+      addStockUserName:'',
+      selectName: '',
       dataKey:null,
       drawer:false,
       sreachpage:{
@@ -250,9 +271,9 @@ export default {
       categoryList:[],
       // 入库验证
       addStockParamsRules:{
-        fkCustomerId: [
-          { required: true, message: '请选择客户', trigger: 'change' }
-        ],
+        // fkCustomerId: [
+        //   { required: true, message: '请选择客户', trigger: 'blur' }
+        // ],
         fkFabricId: [
           { required: true, message: '请选择面料品类', trigger: 'change' }
         ],
@@ -336,16 +357,17 @@ export default {
     },
      // 打开新增入库
     openUpdateDrawer() {
-      this.getUserList()
       this.drawer = true
     },
     // 跳转到面料管理页面
     toAddMianliao () {
       if (this.addStockParams.fkCustomerId!==''){
-        const index = this.userList.findIndex(item => {
-          return item.id === this.addStockParams.fkCustomerId
-        })
-        const key = this.userList[index].name
+        // const index = this.userList.findIndex(item => {
+        //   return item.id === this.addStockParams.fkCustomerId
+        // })
+        // console.log(this.userList[index])
+        // const key = this.userList[index].name
+        const key = this.addStockUserName
         this.$router.push({
           path:'/fabricManage',
           name:'FabricManage',
@@ -371,6 +393,7 @@ export default {
       this.file = ''
       this.formData = ''
       this.lookUrl = ''
+      this.addStockUserName = ''
       this.drawer = false
     },
     // 获取客户名
@@ -379,13 +402,36 @@ export default {
         page:1,
         rows:99999
       }).then((data)=>{
+        const arr = data.data.list
+        arr.map(item=>{
+          return item.companyName = item.userDetail.companyName
+        })
         this.userList = data.data.list;
       })
     },
+     // 公司名联系搜索框
+    querySearch(queryString, cb) {
+      const userList = this.userList;
+      const results = queryString ? userList.filter(this.createFilter(queryString)) : userList;
+      // const results = this.userList
+      // 调用 callback 返回建议列表的数据
+      cb(results)
+    },
+    createFilter(queryString) {
+      return (restaurant) => {
+        return (restaurant.companyName.toLowerCase().indexOf(queryString.toLowerCase()) === 0);
+      }
+    },
     // 选择客户名获取其ID
-    getUserId() {
+    getUserId(a) {
       this.addStockParams.fkFabricId = ''
-      this.getCategory()
+      if (a) {
+        this.addStockParams.fkCustomerId = a.id + ''
+        this.selectName = a.companyName
+        this.getCategory()
+      } else {
+        this.categoryList = []
+      }
     },
     // 面料品类
     getCategory() {
@@ -397,6 +443,7 @@ export default {
     },
     // 保存新增入库（无码单）
     saveAddStockNo() {
+      if (this.addStockUserName!==this.selectName) return this.$message.error('请点击下拉框输入公司名,不要手动输入')
       this.$post('/inventory/in/add',this.addStockParams).then((data)=>{
       if (data.code!==0) return messageUtil.message.error(data.message)
       messageUtil.message.success(data.message)
@@ -407,6 +454,7 @@ export default {
     },
     // 保存新增入库
     saveAddStock() {
+      if (this.addStockUserName === '') return this.$message.error('请选择公司名')
       this.$refs.addStockParamsRef.validate(value => {
         if (!value) return
         if(this.file!=='') {
@@ -550,7 +598,13 @@ export default {
     }
   },
   mounted() {
-    this.$refs.storeSearch.getRegionlist()
+    // this.$refs.storeSearch.getRegionlist()
+    this.getUserList()
+  },
+  computed: {
+    name () {
+      return 1
+    }
   }
 }
 </script>
@@ -602,9 +656,13 @@ export default {
     width: 100%;
     position: absolute;
   }
-  .stockInfo .toAddMianliao{
+  .toAddMianliao{
     padding: 10px;
+    padding-left:20px ;
     cursor: pointer;
+  }
+  .toAddMianliao:hover{
+    color: red;
   }
   .stockInfo .storeManageCheckStockBtn, .shangjiangTiaoboBtn{
     display: flex;

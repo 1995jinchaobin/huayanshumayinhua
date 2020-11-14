@@ -1,6 +1,6 @@
 <template>
   <div class="inboundList">
-    <storeManageSearch @searchList="searchList" @daochu="daochu"></storeManageSearch>
+    <storeManageSearch @searchList="searchList" @daochu="daochu" :companyList="companyList" :regionlist="regionlist"></storeManageSearch>
     <el-table
       :data="rukuList"
       style="width: 100%"
@@ -142,6 +142,10 @@ import StoreManageSearch from '../common/StoreManageSearch'
 export default {
   components: {
     StoreManageSearch
+  },
+  props: {
+    companyList: Array,
+    regionlist: Array
   },
   data () {
     return {

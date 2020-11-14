@@ -17,10 +17,10 @@ Vue.prototype.$get = get;
 Vue.prototype.$post = post;
 Vue.prototype.$deletefn = deletefn;
 Vue.prototype.$put = put;
-// Vue.prototype.$imgUrl = 'http://192.168.1.115:9999/image/'  //线下
-Vue.prototype.$imgUrl = 'https://www.yinhuachaoshi.com/order/image/'  //线上
-// Vue.prototype.$baseUrl = 'https://www.yinhuachaoshi.com/order/'
-// Vue.prototype.$baseUrl = 'http://192.168.1.115:9999'
+Vue.prototype.$imgUrl = 'http://192.168.1.115:9999/image/'  //线下
+// Vue.prototype.$imgUrl = 'https://www.yinhuachaoshi.com/order/image/'  //线上
+// Vue.prototype.$baseUrl = 'https://www.yinhuachaoshi.com/order/'  //线上
+Vue.prototype.$baseUrl = 'http://192.168.1.115:9999'   //线下
 Vue.config.productionTip = false
 Vue.use(ElementUI)
 Vue.use(Print)

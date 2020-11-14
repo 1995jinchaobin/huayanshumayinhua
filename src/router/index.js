@@ -90,6 +90,12 @@ export default new Router({
           path:'/adminRecord',
           name:'AdminRecord',
           component: resolve => require(['@/views/System/manage/AdminRecord'],resolve)
+        },
+        //浆料管理
+        {
+          path:'/slurry',
+          name:'Slurry',
+          component: resolve => require(['@/views/System/manage/Slurry'],resolve)
         }
       ]
     },

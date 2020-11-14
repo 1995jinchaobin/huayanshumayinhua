@@ -750,8 +750,8 @@
          }else if(!this.searchParams.endTime){
            Message({message:"请选择结束时间",type:"error"})
          }else{
-          //  let baseUrl = 'http://192.168.1.115:9999'//线下地址
-           let baseUrl = 'https://www.yinhuachaoshi.com/order'//线上地址
+           let baseUrl = 'http://192.168.1.115:9999'//线下地址
+          //  let baseUrl = 'https://www.yinhuachaoshi.com/order'//线上地址
            let url = `/order/export?startTime=${this.searchParams.startTime}&endTime=${this.searchParams.endTime}`;
            window.open(baseUrl + url,'_block');
          }

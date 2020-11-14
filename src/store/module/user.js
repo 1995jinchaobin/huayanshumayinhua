@@ -1,7 +1,7 @@
 'use strict'
 
 // import modals from '../modals'
-
+// import axios from 'axios'
 /**
  * 用户信息
  * @type {{mutations: {saveLoginInfo(*=, *=): void, changeLoginState(*, *): void}, state: {isLogin: number, user: {name: string, userId: number, account: string}}, getters: {}, actions: {saveLoginInfo({commit: *}, *=): void, changeLoginState({commit: *}): void}}}
@@ -19,6 +19,10 @@ const user = {
       //类型，1：后台，0：搜图
       userType:0
     }
+    // cangkuSearch: {
+    //   companyList: [],
+    //   fabricList: []
+    // }
   },
   getters: {
     user: state => state.user
@@ -37,11 +41,26 @@ const user = {
       state.user.roleBtns = userInfo.roleBtns
       state.user.userType = userInfo.userType
     }
+    // // 保存公司列表
+    // getCompanyData (state, arr) {
+    //   console.log(arr)
+    //   state.cangkuSearch.companyList = arr
+    // }
   },
   actions: {
     saveLoginInfo ({commit}, userInfo) {
       commit('saveLoginInfo', userInfo)
     }
+    // 获取公司列表
+    // getCompanyList (context) {
+    //   axios.get('/customer',{
+    //     page:1,
+    //     rows:99999
+    //   }).then((data)=>{
+    //     console.log(data)
+    //     context.commit('getCompanyData', data.data.data.list)
+    //   })
+    // }
   }
 }
 
