@@ -46,11 +46,17 @@ export default new Router({
           name: 'Flaw',
           component: resolve => require(['@/views/system/manage/Flaw'],resolve)
         },
-        //机器管理
+        //机型管理
         {
           path:'/machineManage',
           name: 'MachineManage',
           component: resolve => require(['@/views/system/manage/MachineManage'],resolve)
+        },
+        //机器管理
+        {
+          path:'/machineChild',
+          name: 'MachineChild',
+          component: resolve => require(['@/views/system/manage/Machine'],resolve)
         },
         // ip设定
         {
@@ -96,6 +102,18 @@ export default new Router({
           path:'/slurry',
           name:'Slurry',
           component: resolve => require(['@/views/System/manage/Slurry'],resolve)
+        },
+        //货品名称
+        {
+          path:'/productName',
+          name:'ProductName',
+          component: resolve => require(['@/views/System/manage/ProductName'],resolve)
+        },
+        //规格型号
+        {
+          path:'/specification',
+          name:'Specification',
+          component: resolve => require(['@/views/System/manage/Specification'],resolve)
         }
       ]
     },

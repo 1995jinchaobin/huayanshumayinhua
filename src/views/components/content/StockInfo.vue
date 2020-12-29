@@ -365,7 +365,6 @@ export default {
         // const index = this.userList.findIndex(item => {
         //   return item.id === this.addStockParams.fkCustomerId
         // })
-        // console.log(this.userList[index])
         // const key = this.userList[index].name
         const key = this.addStockUserName
         this.$router.push({
@@ -590,6 +589,10 @@ export default {
     }
   },
   created(){
+    if(!sessionStorage.getItem("to")){
+      sessionStorage.setItem("to", "1")
+      this.$router.go(0)
+    }
     if (this.$route.params.key!==undefined){
       this.dataKey = this.$route.params.key
       this.getDataOfKey()

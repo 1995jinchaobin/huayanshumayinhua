@@ -2,7 +2,7 @@
   <div class="machineManageContent">
     <div class="note">
       <div class="noteText">
-        机器管理
+        机型管理
       </div>
     </div>
     <div class="data">
@@ -11,7 +11,7 @@
           <div class="searchForm">
             <el-form :inline="true" class="demo-form-inline">
               <el-form-item label="关键字:">
-                <el-input v-model="searchParams.key" placeholder="请输入机器名称"></el-input>
+                <el-input v-model="searchParams.key" placeholder="请输入机型名称"></el-input>
               </el-form-item>
               <el-form-item>
                 <el-button plain @click="clearSearchInfo">重&nbsp;&nbsp;置</el-button>
@@ -25,13 +25,13 @@
           <el-table row-class-name="trStyle" class="tableData" :data="tableData" border stripe width="100%">
             <el-table-column align="center" :show-overflow-tooltip="true" prop="id" label="编号" >
             </el-table-column>
-            <el-table-column align="center" :show-overflow-tooltip="true" prop="name" label="机器名称">
+            <el-table-column align="center" :show-overflow-tooltip="true" prop="name" label="机型名称">
             </el-table-column>
-            <el-table-column align="center" :show-overflow-tooltip="true" prop="capacity" label="机器产能">
+            <el-table-column align="center" :show-overflow-tooltip="true" prop="capacity" label="机型产能">
             </el-table-column>
-            <el-table-column align="center" :show-overflow-tooltip="true" prop="percentage" label="普通机器产能比例">
+            <el-table-column align="center" :show-overflow-tooltip="true" prop="percentage" label="普通机型产能比例">
             </el-table-column>
-            <el-table-column align="center" :show-overflow-tooltip="true" prop="urgentPercentage" label="加急机器产能比例">
+            <el-table-column align="center" :show-overflow-tooltip="true" prop="urgentPercentage" label="加急机型产能比例">
             </el-table-column>
             <el-table-column align="center" :show-overflow-tooltip="true" prop="note" label="备注">
             </el-table-column>
@@ -50,7 +50,7 @@
       </div>
     </div>
     <div>
-      <el-drawer size="50%" title="机器详情" :visible.sync="drawer" direction="rtl">
+      <el-drawer size="50%" title="机型详情" :visible.sync="drawer" direction="rtl">
         <div class="checkDrawer" >
           <el-divider content-position="left"></el-divider>
           <el-form>
@@ -64,7 +64,7 @@
               </el-col>
               <el-col :span="12">
                 <el-form label-width="140px">
-                  <el-form-item label="机器名称:">
+                  <el-form-item label="机型名称:">
                     <label>{{detailInfo.name}}</label>
                   </el-form-item>
                 </el-form>
@@ -73,14 +73,14 @@
             <el-row>
               <el-col :span="11" :offset="1">
                 <el-form label-width="140px">
-                  <el-form-item label="机器产能:">
+                  <el-form-item label="机型产能:">
                     <label>{{detailInfo.capacity}}</label>
                   </el-form-item>
                 </el-form>
               </el-col>
               <el-col :span="12">
                 <el-form label-width="140px">
-                  <el-form-item label="普通机器产能比例:">
+                  <el-form-item label="普通机型产能比例:">
                     <label>{{detailInfo.percentage}}%</label>
                   </el-form-item>
                 </el-form>
@@ -89,7 +89,7 @@
             <el-row>
               <el-col :span="11" :offset="1">
                 <el-form label-width="140px">
-                  <el-form-item label="加急机器产能比例:">
+                  <el-form-item label="加急机型产能比例:">
                     <label>{{detailInfo.urgentPercentage}}%</label>
                   </el-form-item>
                 </el-form>
@@ -127,15 +127,15 @@
                 </el-form-item>
               </el-col>
               <el-col :span="11" :offset="1">
-                <el-form-item label="机器名称:"  prop="name">
-                  <el-input v-model="detailInfo.name" type="text" placeholder="请输入机器名称"></el-input>
+                <el-form-item label="机型名称:"  prop="name">
+                  <el-input v-model="detailInfo.name" type="text" placeholder="请输入机型名称"></el-input>
                 </el-form-item>
               </el-col>
             </el-row>
             <el-row>
               <el-col :span="11" :offset="1">
                 <el-form-item label="产能:" prop="capacity">
-                  <el-input v-model.number="detailInfo.capacity" type="text" placeholder="请输入机器产能"></el-input>
+                  <el-input v-model.number="detailInfo.capacity" type="text" placeholder="请输入机型产能"></el-input>
                 </el-form-item>
               </el-col>
             </el-row>
@@ -237,7 +237,7 @@
       return {
         //查询参数
         searchParams: {
-          //关键字：机器名称
+          //关键字：机型名称
           key: ""
         },
         //分页参数
@@ -257,17 +257,17 @@
           name:'',
           note:''
         },
-        drawerTitle:'新增机器',
+        drawerTitle:'新增机型',
         updateDrawer:false,
         //编辑类型：add,update
         operateType:'add',
         rules:{
-          name:[{ required: true, message: '请输入机器名称', trigger: 'blur' }],
-          capacity:[{required: true, message: '请输入机器产能', trigger: 'blur'},{ type: 'number', message: '机器产能必须为数字值'}],
-          percentage:[{required: true, message: '请输入机器普通产能比例',trigger: 'blur'}],
-          urgentPercentage:[{required: true, message: '请输入机器加急产能比例',trigger: 'blur'}]
+          name:[{ required: true, message: '请输入机型名称', trigger: 'blur' }],
+          capacity:[{required: true, message: '请输入机型产能', trigger: 'blur'},{ type: 'number', message: '机型产能必须为数字值'}],
+          percentage:[{required: true, message: '请输入机型普通产能比例',trigger: 'blur'}],
+          urgentPercentage:[{required: true, message: '请输入机型加急产能比例',trigger: 'blur'}]
         },
-        //做绑定操作的机器id
+        //做绑定操作的机型id
         machineId:0,
         //已绑定打印员列表
         bindedUserList:[],
@@ -315,7 +315,7 @@
           urgentPercentage:0,
           note:''
         };
-        this.drawerTitle = '新增机器';
+        this.drawerTitle = '新增机型';
         this.operateType = 'add';
       },
       //点击编辑按钮，显示编辑弹框
@@ -329,7 +329,7 @@
           urgentPercentage:row.urgentPercentage,
           note:row.note
         };
-        this.drawerTitle = '编辑机器';
+        this.drawerTitle = '编辑机型';
         this.operateType = 'update';
       },
       //关闭抽屉清空数据
@@ -372,7 +372,7 @@
       },
       //删除
       HandlerDelete(machineInfo){
-        messageUtil.confirm('确认要删除该机器吗？',()=>{
+        messageUtil.confirm('确认要删除该机型吗？',()=>{
           this.$deletefn('/machine/'+machineInfo.id,{}).then((data)=>{
             messageUtil.message.success(data.message)
             this.getData();
@@ -388,7 +388,7 @@
       //绑定打印员
       handlerBind(userInfo){
         this.$post('/machine/bind/user',{
-          //机器id
+          //机型id
           fkMachineId:this.machineId,
           //打印员id
           fkUserId:userInfo.id
@@ -401,7 +401,7 @@
       //解绑打印员
       handlerUnbind(userInfo){
         this.$post('/machine/unbind/user',{
-          //机器id
+          //机型id
           fkMachineId:this.machineId,
           //打印员id
           fkUserId:userInfo.id

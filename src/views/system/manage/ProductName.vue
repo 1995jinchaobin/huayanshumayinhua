@@ -1,18 +1,18 @@
 <template>
-  <div class="flaw">
+  <div class="productName">
     <div class="note">
-      <div class="noteText">瑕疵管理</div>
+      <div class="noteText">货品名称</div>
     </div>
     <div class="data">
       <div class="dataContent">
-        <!-- 瑕疵搜索 -->
+        <!-- 货品名称搜索 -->
         <div class="searchArea">
           <div class="searchForm">
             <el-form :inline="true" class="demo-form-inline">
               <el-form-item label="关键字:">
                 <el-input
                   v-model="flawParams.key"
-                  placeholder="请输入关键字"
+                  placeholder="请输入货品名称"
                 ></el-input>
               </el-form-item>
               <el-form-item>
@@ -29,19 +29,21 @@
             </el-form>
           </div>
         </div>
-        <!-- 瑕疵列表 -->
+        <!-- 货品名称列表 -->
         <div class="dataListArea">
           <el-table :data="flawList" stripe border>
+            <el-table-column prop="id" align="center" label="id">
+            </el-table-column>
             <el-table-column prop="name" align="center" label="名称">
             </el-table-column>
-            <el-table-column prop="num" align="center" label="扣除积分">
+            <el-table-column prop="note" align="center" label="备注">
             </el-table-column>
-            <el-table-column label="状态" align="center">
+            <!-- <el-table-column label="状态" align="center">
               <template slot-scope="scope">
                 <span v-if="scope.row.status === 0">存在</span>
                 <span v-else>删除</span>
               </template>
-            </el-table-column>
+            </el-table-column> -->
             <el-table-column label="操作" align="center">
               <template slot-scope="scope">
                 <el-button @click="bianJi(scope.row)" type="primary" size="mini"
@@ -66,7 +68,7 @@
         </div>
       </div>
     </div>
-    <!-- 新增瑕疵抽屉 -->
+    <!-- 新增货品名称抽屉 -->
     <div class="add">
       <el-drawer
         :title="title"
@@ -79,18 +81,18 @@
           :rules="addFlawParamsRules"
           label-width="100px"
         >
-          <el-form-item label="瑕疵名称:" prop="name">
+          <el-form-item label="货品名称:" prop="name">
             <el-input
               v-model="addFlawParams.name"
               type="text"
-              placeholder="请输入瑕疵名称"
+              placeholder="请输入货品名称"
             ></el-input>
           </el-form-item>
-          <el-form-item label="扣除积分:" prop="num">
+          <el-form-item label="备注:" prop="note">
             <el-input
-              v-model="addFlawParams.num"
+              v-model="addFlawParams.note"
               type="text"
-              placeholder="请输入扣除积分"
+              placeholder="请输入备注"
             ></el-input>
           </el-form-item>
         </el-form>
@@ -106,6 +108,7 @@
 <script>
 import messageUtil from '../../../utils/js/MessageUtil'
 export default {
+  name: 'Specification',
   data () {
     return {
       flawParams: {
@@ -115,16 +118,15 @@ export default {
       },
       total: 0,
       flawList: [],
-      // 添加瑕疵
+      // 添加货品名称
       addFlawParams: {
         name: '',
-        num: ''
+        note: ''
       },
       drawerAdd: false,
       title: '',
       addFlawParamsRules: {
-        name: [{ required: true, message: '请输入瑕疵名称', trigger: 'blur' }],
-        num: [{ required: true, message: '请输入扣除积分', trigger: 'blur' }]
+        name: [{ required: true, message: '请输入货品名称', trigger: 'blur' }]
       },
       bianJiId: ''
     }
@@ -134,7 +136,7 @@ export default {
   },
   methods: {
     async getFlawList () {
-      const res = await this.$get('/flaw', {
+      const res = await this.$get('/fabric/goods', {
         ...this.flawParams
       })
       if (res.code !== 0) return messageUtil.message.error(res.message)
@@ -147,7 +149,7 @@ export default {
     },
     // 重置
     clearSearchInfo () {
-      this.flawParams={
+      this.flawParams = {
         page: 1,
         rows: 10,
         key: ''
@@ -158,23 +160,27 @@ export default {
     // getData () { },
     // 新增按钮
     openUpdateDrawer () {
-      this.title = '新增瑕疵'
+      this.title = '新增货品名称'
       this.drawerAdd = true
     },
-    // 关闭新增瑕疵窗口
+    // 关闭新增货品名称窗口
     drawerAddClose () {
       this.$refs.addFlawParamsRef.resetFields()
+      this.addFlawParams = {
+        name: '',
+        note: ''
+      }
       this.drawerAdd = false
     },
-    // 保存新增瑕疵按钮
+    // 保存新增货品名称按钮
     postAddFlawForm () {
       this.$refs.addFlawParamsRef.validate(async value => {
         if (!value) return
-        if (this.title === '新增瑕疵') {
-          const res = await this.$post('/flaw', this.addFlawParams)
+        if (this.title === '新增货品名称') {
+          const res = await this.$post('/fabric/goods', this.addFlawParams)
           messageUtil.message.success(res.message)
         } else {
-          const res = await this.$put('/flaw/' + this.bianJiId, this.addFlawParams)
+          const res = await this.$put('/fabric/goods/' + this.bianJiId, this.addFlawParams)
           messageUtil.message.success(res.message)
         }
         this.getFlawList()
@@ -183,17 +189,17 @@ export default {
     },
     // 编辑
     bianJi (value) {
-      this.title = '编辑瑕疵'
+      this.title = '编辑货品名称'
       this.noteshow = true
       this.addFlawParams.name = value.name
-      this.addFlawParams.num = value.num
+      this.addFlawParams.note = value.note
       this.bianJiId = value.id
       this.drawerAdd = true
     },
     // 删除
     del (value) {
-      messageUtil.confirm('确认要删除该瑕疵吗？', async a => {
-        const res = await this.$deletefn('/flaw/' + value.id, {})
+      messageUtil.confirm('确认要删除该货品名称吗？', async a => {
+        const res = await this.$deletefn('/fabric/goods/' + value.id, {})
         messageUtil.message.success(res.message)
         this.getFlawList()
       })
@@ -203,16 +209,16 @@ export default {
 </script>
 
 <style>
-.flaw {
+.productName {
   overflow-y: auto;
   overflow-x: hidden;
   width: calc(100%);
   height: calc(100vh - 64px) !important;
 }
-.flaw .note {
+.productName .note {
   height: 64px;
 }
-.flaw .noteText {
+.productName .noteText {
   font-family: PingFangSC-Medium;
   font-size: 20px;
   color: rgba(0, 0, 0, 0.85);
@@ -222,45 +228,45 @@ export default {
   padding-top: 18px;
   font-weight: bold;
 }
-.flaw .data {
+.productName .data {
   width: calc(100%);
   min-height: calc(100% - 112px);
   height: auto;
   padding: 24px 24px 24px 24px;
   background-color: #f0f3f7;
 }
-.flaw .dataContent {
+.productName .dataContent {
   width: calc(100% - 48px);
   background-color: #fff;
   border-radius: 2px;
   border-radius: 2px;
   padding-bottom: 32px;
 }
-.flaw .searchArea {
+.productName .searchArea {
   width: calc(100%);
   margin: 0px 24px 0px 0px;
 }
 
-.flaw .searchForm {
+.productName .searchForm {
   padding-top: 24px;
   padding-left: 32px;
 }
 
-.flaw .dataListArea {
+.productName .dataListArea {
   margin: 0px 24px 24px 24px;
 }
 
-.flaw .tableData {
+.productName .tableData {
   height: 100%;
 }
-.flaw .addBottomBtn {
+.productName .addBottomBtn {
   display: flex;
   justify-content: center;
 }
-.flaw .addBottomBtn .el-button {
+.productName .addBottomBtn .el-button {
   margin: auto 20px;
 }
-.flaw .page {
+.productName .page {
   display: flex;
   justify-content: flex-end;
   margin-top: 10px;
