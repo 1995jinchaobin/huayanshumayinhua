@@ -628,8 +628,6 @@ export default {
     },
     //货品输入框搜索
     dropDownSearch () {
-      console.log(this.huopinNameListFilter)
-      console.log(this.huopinNameList)
       this.mianliaoName.huopinName = '';
       this.huopinNameListFilter = this.huopinNameList.filter(item => {
         return item.name.includes(this.huopinSearchValue)
@@ -754,7 +752,6 @@ export default {
     },
     //点击编辑按钮，显示编辑弹框
     check (row) {
-      console.log(row)
       // console.log(this.customerName)
       if (row.fkCustomerId === -10) {
         this.radio = '2'
@@ -825,6 +822,19 @@ export default {
           const num = Number(this.jingxiaoInfo.percent)
           if (num < 0 || num >= 100) return this.$message.error('缩水比例应为0~100')
           this.jingxiaoInfo.name = this.mianliaoName.huopinName + '-' + this.mianliaoName.guigeName
+          let goodsNameId, goodsSpecId
+          this.huopinNameList.forEach(item => {
+            if (item.name === this.mianliaoName.huopinName) {
+              goodsNameId = item.id
+            }
+          })
+          this.guigeTypeList.forEach(item => {
+            if (item.name === this.mianliaoName.guigeName) {
+              goodsSpecId = item.id
+            }
+          })
+          this.jingxiaoInfo.goodsNameId = goodsNameId
+          this.jingxiaoInfo.goodsSpecId = goodsSpecId
           this.$post('/fabric', this.jingxiaoInfo).then((data) => {
             messageUtil.message.success(data.message)
             if (data.code === 0) {
@@ -862,6 +872,19 @@ export default {
                 })
               }
               this.detailInfo.name = this.mianliaoName.huopinName + '-' + this.mianliaoName.guigeName
+              let goodsNameId, goodsSpecId
+              this.huopinNameList.forEach(item => {
+                if (item.name === this.mianliaoName.huopinName) {
+                  goodsNameId = item.id
+                }
+              })
+              this.guigeTypeList.forEach(item => {
+                if (item.name === this.mianliaoName.guigeName) {
+                  goodsSpecId = item.id
+                }
+              })
+              this.detailInfo.goodsNameId = goodsNameId
+              this.detailInfo.goodsSpecId = goodsSpecId
               this.$post('/fabric', this.detailInfo).then((data) => {
                 messageUtil.message.success(data.message)
                 this.closeCheckDrawer();
@@ -933,7 +956,6 @@ export default {
       })
       if (res.code !== 0) return messageUtil.message.error(res.message)
       this.huopinNameList = res.data.list
-      console.log(this.huopinNameList)
       this.huopinNameListFilter = res.data.list
     },
     // 获取规格型号

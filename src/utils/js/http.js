@@ -6,8 +6,8 @@ import router from '../../router';
 
 axios.defaults.timeout = 5000;
 // 设置默认URL
-axios.defaults.baseURL = 'http://192.168.1.115:9999/';  //线下
-// axios.defaults.baseURL = 'https://www.yinhuachaoshi.com/order';  //线上
+// axios.defaults.baseURL = 'http://192.168.1.115:9999/';  //线下
+axios.defaults.baseURL = 'https://www.yinhuachaoshi.com/order';  //线上
 // 设置post请求头
 axios.defaults.headers.post['Content-Type'] = 'application/json;charset=UTF-8';
 // http 请求拦截

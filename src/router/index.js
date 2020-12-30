@@ -114,6 +114,12 @@ export default new Router({
           path:'/specification',
           name:'Specification',
           component: resolve => require(['@/views/System/manage/Specification'],resolve)
+        },
+        //测试
+        {
+          path:'/ceshi',
+          name:'ceshi',
+          component: resolve => require(['@/views/System/manage/ceshi'],resolve)
         }
       ]
     },

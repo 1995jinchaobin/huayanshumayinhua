@@ -116,7 +116,7 @@ export default {
     // this.timer = setInterval(this.warnMessage,10000)
     this.timer = setInterval(() => {
       setTimeout(this.warnMessage, 0)
-    }, 10000)
+    }, 60000)
     // this.defaultActive = window.sessionStorage.getItem('defaultActive')
     if (window.sessionStorage.getItem('defaultActive')) {
       this.defaultActive = window.sessionStorage.getItem('defaultActive')

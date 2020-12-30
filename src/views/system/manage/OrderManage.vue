@@ -328,7 +328,7 @@
                   </el-form-item>
                 </el-form>
               </el-col>
-              <el-col :span="12">
+              <el-col :span="11">
                 <el-form label-width="100px">
                   <el-form-item label="打印数量:">
                     <!-- <label>{{ detailInfo.meter }}</label> -->
@@ -481,11 +481,20 @@
               </el-col>
             </el-row>
             <el-row>
-              <el-form label-width="100px">
-                <el-form-item label="花型路径:">
-                  <label>{{ detailInfo.filePath }}</label>
-                </el-form-item>
-              </el-form>
+              <el-col :span="11" :offset="1">
+                <el-form label-width="100px">
+                  <el-form-item label="花型路径:">
+                    <label>{{ detailInfo.filePath }}</label>
+                  </el-form-item>
+                </el-form>
+              </el-col>
+              <el-col :span="11" :offset="1">
+                <el-form label-width="100px">
+                  <el-form-item label="浆料配方:">
+                    <label>{{ detailInfo.sizingName }}</label>
+                  </el-form-item>
+                </el-form>
+              </el-col>
             </el-row>
             <el-row>
               <el-col :span="11" :offset="1">
@@ -498,6 +507,67 @@
                     <div v-if="detailInfo.type == 8">
                       退货备注：{{ detailInfo.note3 }}
                     </div>
+                  </el-form-item>
+                </el-form>
+              </el-col>
+            </el-row>
+            <el-row>
+              <el-col :span="11" :offset="1">
+                <el-form label-width="100px">
+                  <el-form-item label="在线打印员:">
+                    <label>{{ detailInfo.onlinePrinter }}</label>
+                  </el-form-item>
+                </el-form>
+              </el-col>
+              <el-col :span="11" :offset="1">
+                <el-form label-width="100px">
+                  <el-form-item label="瑕疵积分扣除:">
+                    <label v-if="detailInfo.type >= 6"
+                      >{{ -detailInfo.reduceScoreTotal
+                      }}{{
+                        (detailInfo.meter / 100) * 20 >=
+                        detailInfo.reduceScoreTotal
+                          ? "（合格）"
+                          : "（不合格）"
+                      }}</label
+                    >
+                    <label v-else>暂未检验</label>
+                  </el-form-item>
+                </el-form>
+              </el-col>
+            </el-row>
+            <el-row>
+              <el-col :span="22" :offset="1">
+                <el-form label-width="100px">
+                  <el-form-item label="客户评论:">
+                    <label>{{ detailInfo.comment1 }}</label>
+                    <br />
+                    <el-image
+                      v-for="item in detailInfo.orderCommentList0"
+                      :key="item.url"
+                      style="width: 100px; height: 100px"
+                      :src="baseUrl + item.url"
+                      :preview-src-list="showImg(detailInfo.orderCommentList0)"
+                    >
+                    </el-image>
+                  </el-form-item>
+                </el-form>
+              </el-col>
+            </el-row>
+            <el-row>
+              <el-col :span="22" :offset="1">
+                <el-form label-width="100px">
+                  <el-form-item label="业务员评论:">
+                    <label>{{ detailInfo.comment2 }}</label>
+                    <br />
+                    <el-image
+                      v-for="item in detailInfo.orderCommentList1"
+                      :key="item.url"
+                      style="width: 100px; height: 100px"
+                      :src="baseUrl + item.url"
+                      :preview-src-list="showImg(detailInfo.orderCommentList1)"
+                    >
+                    </el-image>
                   </el-form-item>
                 </el-form>
               </el-col>
@@ -694,7 +764,9 @@
                   </tr>
                   <tr>
                     <td width="12%">花型路径：</td>
-                    <td colspan="7" width="46%">{{ detailInfo.filePath }}</td>
+                    <td colspan="3" width="46%">{{ detailInfo.filePath }}</td>
+                    <td width="12%">浆料配方：</td>
+                    <td colspan="3" width="30%">{{ detailInfo.sizingName }}</td>
                   </tr>
                   <tr>
                     <td width="12%">配置方案：</td>
@@ -877,7 +949,7 @@ export default {
       },
       detailOperateInfo: {},
       //订单状态数组
-      typeList: ['审核不通过', '待审核', '已审核', '已上浆', '已分配', '已打印', '已蒸花', '已检验', '已发货', '已退货', '已发货审核', '已取消'],
+      typeList: ['审核不通过', '待审核', '已审核', '已上浆', '打印中', '已打印', '已蒸花', '已检验', '发货审核中', '已退货', '', '发货中', '', '', '已发货'],
       //订单类型数组
       type1List: ['全部', '待处理', '已完成'],
       drawerTitle: '新增用户',
@@ -893,7 +965,7 @@ export default {
       customerList: [],
       roleTypeList: [],
       baseUrl: '',
-      operateTypeList: ['开单', '审核', '上浆', '分配', '打印', '蒸花水洗定型', '检验', '出库', '退货', '发货审核', '打印确认', '调色'],
+      operateTypeList: ['开单', '审核', '上浆', '分配打印', '打印', '蒸花水洗定型', '检验', '出库', '退货', '发货审核', '打印确认', '调色', '完成检验', '提交快递单'],
       dialogVisible: false,
       //是否显示订单打印
       orderPrintDialogVisible: false,
@@ -973,7 +1045,6 @@ export default {
     },
     //点击编辑按钮，显示编辑弹框
     check (row) {
-      console.log(row.type)
       const newDate = new Date().getTime()
       const timeCaheng = newDate - row.createTime1
       const timeFen = timeCaheng / 1000 / 60
@@ -1078,7 +1149,7 @@ export default {
           //领面料：仓库管理员
           this.detailOperateInfo.getFUser = this.detailInfo.orderOperations[i].userName;
           this.detailOperateInfo.getFTime = dateUtil.formatDate(this.detailInfo.orderOperations[i].createTime, 'YYYY-MM-dd HH:mm');
-        } else if (this.detailInfo.orderOperations[i].type >= '4') {
+        } else if (this.detailInfo.orderOperations[i].type == '10') {
           //打印
           printList.push({
             'printUser': this.detailInfo.orderOperations[i].userName,
@@ -1089,7 +1160,7 @@ export default {
           //蒸花
           this.detailOperateInfo.flowerUser = this.detailInfo.orderOperations[i].userName;
           this.detailOperateInfo.flowerTime = dateUtil.formatDate(this.detailInfo.orderOperations[i].createTime, 'YYYY-MM-dd HH:mm');
-        } else if (this.detailInfo.orderOperations[i].type == '7') {
+        } else if (this.detailInfo.orderOperations[i].type == '13') {
           //出库
           this.detailOperateInfo.outUser = this.detailInfo.orderOperations[i].userName;
           this.detailOperateInfo.outTime = dateUtil.formatDate(this.detailInfo.orderOperations[i].createTime, 'YYYY-MM-dd HH:mm');
@@ -1104,7 +1175,6 @@ export default {
       }
       this.detailOperateInfo.printList = printList;
       this.orderPrintDialogVisible = true;
-      console.log(printList)
     },
     outExe () {
       if (!this.searchParams.startTime) {
@@ -1112,8 +1182,8 @@ export default {
       } else if (!this.searchParams.endTime) {
         Message({ message: "请选择结束时间", type: "error" })
       } else {
-        let baseUrl = 'http://192.168.1.115:9999'//线下地址
-        // let baseUrl = 'https://www.yinhuachaoshi.com/order'//线上地址
+        // let baseUrl = 'http://192.168.1.115:9999'//线下地址
+        let baseUrl = 'https://www.yinhuachaoshi.com/order'//线上地址
         let url = `/order/export?startTime=${this.searchParams.startTime}&endTime=${this.searchParams.endTime}`;
         window.open(baseUrl + url, '_block');
       }
