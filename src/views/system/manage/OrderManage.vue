@@ -1126,7 +1126,7 @@ export default {
     },
     showPrint (orderInfo) {
       orderInfo.orderDetails.map(item => {
-        if (item.flowerNum.indexOf('HY') === 0) {
+        if (item.flowerNum.indexOf('HY') === 0 || item.flowerNum.indexOf('hy') === 0) {
           item.flowerNum = item.flowerNum.slice(2)
         }
       })
